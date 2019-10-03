@@ -39,7 +39,7 @@
             android:name=".Search.SearchActivity"
             android:configChanges="orientation|screenSize" />
         <activity
-            android:name=".AddAccount.AddAccountActivity"
+            android:name=".Account.AddAccountActivity"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".Home.MainActivity"/>
     </application>

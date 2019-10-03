@@ -16,12 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.thestrongbox.About.AboutAppActivity;
-import com.example.thestrongbox.AddAccount.AddAccountActivity;
+import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
 import com.example.thestrongbox.Search.SearchActivity;
-import com.example.thestrongbox.StartApp.Start_Activity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
