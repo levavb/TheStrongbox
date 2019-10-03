@@ -47,6 +47,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         aToolbar = findViewById(R.id.add_account_toolbar);
         setSupportActionBar(aToolbar);
         getSupportActionBar().setTitle("Update Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Auth = FirebaseAuth.getInstance();
         String user_id = Auth.getCurrentUser().getUid();
