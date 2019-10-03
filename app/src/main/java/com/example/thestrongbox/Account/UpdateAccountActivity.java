@@ -50,7 +50,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         Auth = FirebaseAuth.getInstance();
         String user_id = Auth.getCurrentUser().getUid();
         String entry_id = getIntent().getStringExtra("entryId");
-        UpdateDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id).child(entry_id);
+        UpdateDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id).child("data").child(entry_id);
 
 
         inputEmail = findViewById(R.id.inputEmail);

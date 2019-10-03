@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
+import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteEntry(String entryId) {
-       UserDataInDatabaseReference.child(entryId).removeValue();
+       UserDataInDatabaseReference.child(entryId).getRef().removeValue();
     }
     // tool bar action menu
     @Override
@@ -113,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("YES, Log out", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (currentUser != null){
-                        userDatabaseReference.child("active_now").setValue(ServerValue.TIMESTAMP);
-                    }
                     mAuth.signOut();
                     logOutUser();
                 }
@@ -209,7 +207,9 @@ public class MainActivity extends AppCompatActivity {
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                deleteEntry(dataKey);
+                Intent mainIntent = new Intent(MainActivity.this, MainActivity.class);
+                startActivity(mainIntent);
             }
         });
         right_side.addView(removeBtn);
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AddAccountActivity.class);
+                Intent intent = new Intent(MainActivity.this, UpdateAccountActivity.class);
                 intent.putExtra("entryId", dataKey);
                 startActivity(intent);
             }
