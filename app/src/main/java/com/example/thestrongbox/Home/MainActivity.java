@@ -195,13 +195,13 @@ public class MainActivity extends AppCompatActivity {
         TextView note_tv = new TextView(this);
         TextView url_tv = new TextView(this);
 
-        email_tv.setText(Semail);
+        email_tv.setText("Email/User Name: " + Semail);
         email_tv.setPadding(15,10,5,5);
-        pass_tv.setText(Spass);
+        pass_tv.setText("Password: " + Spass);
         pass_tv.setPadding(15,0,5,5);
-        note_tv.setText(Snote);
+        note_tv.setText("Note: " + Snote);
         note_tv.setPadding(15,0,5,5);
-        url_tv.setText(Surl);
+        url_tv.setText("Url: " + Surl);
         url_tv.setPadding(15,0,5,10);
 
         left_side.addView(email_tv);
