@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.thestrongbox.Home.MainActivity;
+import com.example.thestrongbox.Model.AESCrypt;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -68,11 +69,11 @@ public class AddAccountActivity extends AppCompatActivity {
 
     public void uploadAccount() {
         String email = inputEmail.getText().toString();
-        String password = inputPassword.getText().toString();
+        String password_enc = inputPassword.getText().toString();
         String note = inputNote.getText().toString();
         String url = inputUrl.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(note) || TextUtils.isEmpty(url) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(note) || TextUtils.isEmpty(url) || TextUtils.isEmpty(password_enc)) {
                 //TODO: AFEK if text empty
         } else {
 
@@ -81,6 +82,13 @@ public class AddAccountActivity extends AppCompatActivity {
 
             HashMap<String, Object> strongBoxEntry_text_body = new HashMap<>();
             strongBoxEntry_text_body.put("email", email);
+
+            String password = null;
+            try {
+                password = AESCrypt.encrypt(password_enc);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             strongBoxEntry_text_body.put("password", password);
             strongBoxEntry_text_body.put("note", note);
             strongBoxEntry_text_body.put("url", url);

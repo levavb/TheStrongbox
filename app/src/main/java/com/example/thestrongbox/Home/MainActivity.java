@@ -19,6 +19,7 @@ import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
+import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
 import com.example.thestrongbox.Search.SearchActivity;
@@ -148,12 +149,18 @@ public class MainActivity extends AppCompatActivity {
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
                         String Semail = postSnapshot.child("email").getValue().toString();
-                        String Spass = postSnapshot.child("password").getValue().toString();
+                        String Spass_enc = postSnapshot.child("password").getValue().toString();
                         String Snote = postSnapshot.child("note").getValue().toString();
                         String Surl = postSnapshot.child("url").getValue().toString();
 
-                        AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl);
 
+                        String Spass = null;
+                        try {
+                            Spass = AESCrypt.decrypt(Spass_enc);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl);
                     }
                 }
                 @Override
@@ -172,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         new_window.setOrientation(0);
 
         LinearLayout left_side = new LinearLayout(this);
-        left_side.setLayoutParams(new LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.MATCH_PARENT));
+        left_side.setLayoutParams(new LinearLayout.LayoutParams(900, LinearLayout.LayoutParams.MATCH_PARENT));
         left_side.setOrientation(1);
         LinearLayout right_side = new LinearLayout(this);
         right_side.setLayoutParams(new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -204,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         removeBtn.setImageResource(R.drawable.ic_delete_forever_black_24dp);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         removeBtn.setLayoutParams(lp);
+        removeBtn.setPadding(0,40,0,0);
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
