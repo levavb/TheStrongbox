@@ -104,8 +104,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
                 }
 
                 saveInformation(email, note, password, url);
-                Intent mainIntent = new Intent(UpdateAccountActivity.this, MainActivity.class);
-                startActivity(mainIntent);
+
             }
         });
 
@@ -113,15 +112,15 @@ public class UpdateAccountActivity extends AppCompatActivity {
     }
 
     private void saveInformation(String email, String note, String password, String url) {
-        Toast.makeText(UpdateAccountActivity.this, "hahahah2",Toast.LENGTH_SHORT).show(); //TODO: Change text
+
         if (TextUtils.isEmpty(email)){
-            Toast.makeText(UpdateAccountActivity.this, "Oops! your name can't be empty",Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateAccountActivity.this, "Oops! your Email can't be empty",Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(note)){
-            Toast.makeText(UpdateAccountActivity.this, "Your name should be 3 to 40 numbers of characters",Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateAccountActivity.this, "Oops! your Note can't be empty",Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(password)){
-            Toast.makeText(UpdateAccountActivity.this, "Your mobile number is required.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(url)){
-            Toast.makeText(UpdateAccountActivity.this, "Sorry! your mobile number is too short",Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateAccountActivity.this, "Oops! your Url can't be empty",Toast.LENGTH_SHORT).show();
         } else {
             UpdateDatabaseReference.child("email").setValue(email);
             UpdateDatabaseReference.child("url").setValue(url);
@@ -130,16 +129,16 @@ public class UpdateAccountActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            //TODO: Edit completed
                             Log.d("UpdateDB:", "Completed");
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    //TODO: Edit Failed
                     Log.d("UpdateDB:", "Failed");
                 }
             });
+            Intent mainIntent = new Intent(UpdateAccountActivity.this, MainActivity.class);
+            startActivity(mainIntent);
         }
     }
 
