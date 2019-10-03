@@ -21,12 +21,14 @@ import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
 import com.example.thestrongbox.Search.SearchActivity;
-import com.example.thestrongbox.StartApp.Start_Activity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference userDatabaseReference;
     public FirebaseUser currentUser;
+    private DatabaseReference UserDataInDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
+        String user_id = mAuth.getCurrentUser().getUid();
+        UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id).child("data");
+
         if (currentUser != null){
             String user_uID = mAuth.getCurrentUser().getUid();
 
@@ -55,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
                     .child("users").child(user_uID);
         }
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
+
+//        displayAllAccounts();
+        AddAccountToList("Semail", "Spass", "Snote", "Surl");
     }
 
     // tool bar action menu
@@ -128,29 +137,52 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, AddAccountActivity.class);
         startActivity(intent);
+    }
 
-        AddAccountToList();
+    private void displayAllAccounts() {
+
+        UserDataInDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+
+                    String Semail = postSnapshot.child("email").getValue().toString();
+                    String Spass = postSnapshot.child("password").getValue().toString();
+                    String Snote = postSnapshot.child("note").getValue().toString();
+                    String Surl = postSnapshot.child("url").getValue().toString();
+
+                    AddAccountToList(Semail, Spass, Snote, Surl);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
-    private void AddAccountToList() {
+    private void AddAccountToList(String Semail, String Spass, String Snote, String Surl) {
 
         LinearLayout new_window = new LinearLayout(this);
-        new_window.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 150));
+        new_window.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200));
+        new_window.setBackgroundColor(R.color.white);
+        new_window.setBackgroundResource(R.drawable.layout_bg);
         new_window.setOrientation(1);
-        TextView user_name_tv = new TextView(this);
+        TextView email_tv = new TextView(this);
         TextView pass_tv = new TextView(this);
         TextView note_tv = new TextView(this);
+        TextView url_tv = new TextView(this);
 
-        user_name_tv.setText("levav");
-        pass_tv.setText("55555555");
-        note_tv.setText("walla@gmail.com");
+        email_tv.setText(Semail);
+        pass_tv.setText(Spass);
+        note_tv.setText(Snote);
+        url_tv.setText(Surl);
 
-        user_name_tv.setTextColor(R.color.black);
-
-        new_window.addView(user_name_tv);
+        new_window.addView(email_tv);
         new_window.addView(pass_tv);
         new_window.addView(note_tv);
+        new_window.addView(url_tv);
 
         RootLayout.addView(new_window);
     }
