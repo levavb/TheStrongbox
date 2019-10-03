@@ -39,8 +39,8 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/UserName"
-                android:hint=" User Name"
+                android:id="@+id/inputEmail"
+                android:hint=" Email"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -72,6 +72,20 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_height="wrap_content"
                 android:hint=" Note"
                 android:id="@+id/inputNote"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint=" Url"
+                android:id="@+id/inputUrl"
                 />
         </android.support.design.widget.TextInputLayout>
 
