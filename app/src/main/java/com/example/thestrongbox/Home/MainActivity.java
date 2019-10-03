@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         UserDataInDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
+                    RootLayout.removeAllViews();
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
                         String Semail = postSnapshot.child("email").getValue().toString();
@@ -158,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
+                    Log.d("OnCancelled", "on");
                 }
         });
     }
@@ -208,8 +210,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deleteEntry(dataKey);
-                Intent mainIntent = new Intent(MainActivity.this, MainActivity.class);
-                startActivity(mainIntent);
             }
         });
         right_side.addView(removeBtn);

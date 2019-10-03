@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.thestrongbox.Home.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,8 +60,6 @@ public class AddAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadAccount();
-                Intent mainIntent = new Intent(AddAccountActivity.this, MainActivity.class);
-                startActivity(mainIntent);
             }
         });
 
@@ -72,8 +71,15 @@ public class AddAccountActivity extends AppCompatActivity {
         String note = inputNote.getText().toString();
         String url = inputUrl.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(note) || TextUtils.isEmpty(url) || TextUtils.isEmpty(password)) {
-                //TODO: AFEK if text empty
+
+        if (TextUtils.isEmpty(email)){
+            Toast.makeText(AddAccountActivity.this, "Oops! your Email can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(note)){
+            Toast.makeText(AddAccountActivity.this, "Oops! your Note can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(password)){
+            Toast.makeText(AddAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(url)){
+            Toast.makeText(AddAccountActivity.this, "Oops! your Url can't be empty",Toast.LENGTH_SHORT).show();
         } else {
 
             DatabaseReference user_data_key = rootReference.child("users").child(UserId).child("data").push();
@@ -94,9 +100,12 @@ public class AddAccountActivity extends AppCompatActivity {
                     if (databaseError != null){
                         Log.e("Sending message", databaseError.getMessage());
                     }
-                    inputNote.setText(""); //TODO: if writting fail
+                    else
+                        Toast.makeText(AddAccountActivity.this, "Sorry! Update data failed",Toast.LENGTH_SHORT).show();
                 }
             });
+            Intent mainIntent = new Intent(AddAccountActivity.this, MainActivity.class);
+            startActivity(mainIntent);
         }
     }
 }
