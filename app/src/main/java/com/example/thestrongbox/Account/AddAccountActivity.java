@@ -68,7 +68,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
     public void uploadAccount() {
         String email = inputEmail.getText().toString();
-        String password_enc = inputPassword.getText().toString();
+        String password = inputPassword.getText().toString();
         String note = inputNote.getText().toString();
         String url = inputUrl.getText().toString();
 
@@ -89,13 +89,13 @@ public class AddAccountActivity extends AppCompatActivity {
             HashMap<String, Object> strongBoxEntry_text_body = new HashMap<>();
             strongBoxEntry_text_body.put("email", email);
 
-            String password = null;
+            String password_enc = null;
             try {
-                password = AESCrypt.encrypt(password_enc);
+                password_enc = AESCrypt.encrypt(password);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            strongBoxEntry_text_body.put("password", password);
+            strongBoxEntry_text_body.put("password", password_enc);
             strongBoxEntry_text_body.put("note", note);
             strongBoxEntry_text_body.put("url", url);
 
