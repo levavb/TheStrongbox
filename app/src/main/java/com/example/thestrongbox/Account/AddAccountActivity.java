@@ -1,4 +1,4 @@
-package com.example.thestrongbox.AddAccount;
+package com.example.thestrongbox.Account;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.example.thestrongbox.Home.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,12 +17,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 
 import com.example.thestrongbox.R;
-import com.google.firebase.storage.FirebaseStorage;
 
-import java.time.Instant;
 import java.util.HashMap;
 
 public class AddAccountActivity extends AppCompatActivity {
@@ -42,7 +38,6 @@ public class AddAccountActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
-        Log.d("AFEK", "ON CREATE ");
         aToolbar = findViewById(R.id.add_account_toolbar);
         setSupportActionBar(aToolbar);
         getSupportActionBar().setTitle("Add Account");
@@ -53,9 +48,7 @@ public class AddAccountActivity extends AppCompatActivity {
         Auth = FirebaseAuth.getInstance();
         User = Auth.getCurrentUser();
         if (User != null) {UserId = User.getUid();}
-        else {
-            Log.d("AFEK", "else ");
-        }
+
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
         inputNote = findViewById(R.id.inputNote);

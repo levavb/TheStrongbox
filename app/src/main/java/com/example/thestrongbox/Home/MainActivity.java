@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.thestrongbox.About.AboutAppActivity;
-import com.example.thestrongbox.AddAccount.AddAccountActivity;
+import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         displayAllAccounts();
     }
 
+    public void deleteEntry(String entryId) {
+       UserDataInDatabaseReference.child(entryId).removeValue();
+    }
     // tool bar action menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -141,22 +144,23 @@ public class MainActivity extends AppCompatActivity {
     private void displayAllAccounts() {
 
         UserDataInDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
-                    String Semail = postSnapshot.child("email").getValue().toString();
-                    String Spass = postSnapshot.child("password").getValue().toString();
-                    String Snote = postSnapshot.child("note").getValue().toString();
-                    String Surl = postSnapshot.child("url").getValue().toString();
+                        String Semail = postSnapshot.child("email").getValue().toString();
+                        String Spass = postSnapshot.child("password").getValue().toString();
+                        String Snote = postSnapshot.child("note").getValue().toString();
+                        String Surl = postSnapshot.child("url").getValue().toString();
 
-                    AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl);
+                        AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl);
+
+                    }
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
         });
     }
 
