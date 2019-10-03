@@ -133,7 +133,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 storeDefaultDatabaseReference.child("search_name").setValue(name.toLowerCase());
                                 storeDefaultDatabaseReference.child("user_mobile").setValue(mobile);
                                 storeDefaultDatabaseReference.child("user_email").setValue(email);
-                                storeDefaultDatabaseReference.child("device_token").setValue(deviceToken)
+                                storeDefaultDatabaseReference.child("device_token").setValue(deviceToken);
+                                storeDefaultDatabaseReference.child("data").setValue("")
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
