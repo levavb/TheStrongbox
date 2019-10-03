@@ -62,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
 
-//        displayAllAccounts();
-        AddAccountToList("Semail", "Spass", "Snote", "Surl");
+        displayAllAccounts();
     }
 
     // tool bar action menu
@@ -152,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     String Snote = postSnapshot.child("note").getValue().toString();
                     String Surl = postSnapshot.child("url").getValue().toString();
 
-                    AddAccountToList(Semail, Spass, Snote, Surl);
+                    AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl);
                 }
             }
             @Override
@@ -162,27 +161,68 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
-    private void AddAccountToList(String Semail, String Spass, String Snote, String Surl) {
+    private void AddAccountToList(final String dataKey, String Semail, String Spass, String Snote, String Surl) {
 
         LinearLayout new_window = new LinearLayout(this);
-        new_window.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 200));
+        new_window.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 250));
         new_window.setBackgroundColor(R.color.white);
         new_window.setBackgroundResource(R.drawable.layout_bg);
-        new_window.setOrientation(1);
+        new_window.setOrientation(0);
+
+        LinearLayout left_side = new LinearLayout(this);
+        left_side.setLayoutParams(new LinearLayout.LayoutParams(400, LinearLayout.LayoutParams.MATCH_PARENT));
+        left_side.setOrientation(1);
+        LinearLayout right_side = new LinearLayout(this);
+        right_side.setLayoutParams(new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.MATCH_PARENT));
+        right_side.setOrientation(1);
+
+        new_window.addView(left_side);
+        new_window.addView(right_side);
+
         TextView email_tv = new TextView(this);
         TextView pass_tv = new TextView(this);
         TextView note_tv = new TextView(this);
         TextView url_tv = new TextView(this);
 
         email_tv.setText(Semail);
+        email_tv.setPadding(15,10,5,5);
         pass_tv.setText(Spass);
+        pass_tv.setPadding(15,0,5,5);
         note_tv.setText(Snote);
+        note_tv.setPadding(15,0,5,5);
         url_tv.setText(Surl);
+        url_tv.setPadding(15,0,5,10);
 
-        new_window.addView(email_tv);
-        new_window.addView(pass_tv);
-        new_window.addView(note_tv);
-        new_window.addView(url_tv);
+        left_side.addView(email_tv);
+        left_side.addView(pass_tv);
+        left_side.addView(note_tv);
+        left_side.addView(url_tv);
+
+        ImageButton removeBtn = new ImageButton(this);
+        removeBtn.setImageResource(R.drawable.ic_delete_forever_black_24dp);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        removeBtn.setLayoutParams(lp);
+        removeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        right_side.addView(removeBtn);
+
+        ImageButton editBtn = new ImageButton(this);
+        editBtn.setImageResource(R.drawable.ic_edit_black_24dp);
+        LinearLayout.LayoutParams lpE = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        editBtn.setLayoutParams(lpE);
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AddAccountActivity.class);
+                intent.putExtra("entryId", dataKey);
+                startActivity(intent);
+            }
+        });
+        right_side.addView(editBtn);
 
         RootLayout.addView(new_window);
     }
