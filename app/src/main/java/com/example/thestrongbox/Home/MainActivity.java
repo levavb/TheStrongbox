@@ -66,6 +66,9 @@ public class MainActivity extends AppCompatActivity {
         AddAccountToList("Semail", "Spass", "Snote", "Surl");
     }
 
+    public void deleteEntry(String entryId) {
+       UserDataInDatabaseReference.child(entryId).removeValue();
+    }
     // tool bar action menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -142,22 +145,22 @@ public class MainActivity extends AppCompatActivity {
     private void displayAllAccounts() {
 
         UserDataInDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
 
-                    String Semail = postSnapshot.child("email").getValue().toString();
-                    String Spass = postSnapshot.child("password").getValue().toString();
-                    String Snote = postSnapshot.child("note").getValue().toString();
-                    String Surl = postSnapshot.child("url").getValue().toString();
+                        String Semail = postSnapshot.child("email").getValue().toString();
+                        String Spass = postSnapshot.child("password").getValue().toString();
+                        String Snote = postSnapshot.child("note").getValue().toString();
+                        String Surl = postSnapshot.child("url").getValue().toString();
 
-                    AddAccountToList(Semail, Spass, Snote, Surl);
+                        AddAccountToList(Semail, Spass, Snote, Surl);
+                    }
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
         });
     }
 
