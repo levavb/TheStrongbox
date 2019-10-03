@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.thestrongbox">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".StartApp.Start_Activity"
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Home.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginReg.LoginActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ForgotPassword.ForgotPassActivity"
+            android:parentActivityName=".LoginReg.LoginActivity" />
+        <activity
+            android:name=".LoginReg.RegisterActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".About.AboutAppActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".ProfileSetting.SettingsActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".Search.SearchActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".AddAccount.AddAccountActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".Home.MainActivity"/>
+    </application>
+
+</manifest>
