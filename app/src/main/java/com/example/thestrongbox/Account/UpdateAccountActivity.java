@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.thestrongbox.Home.MainActivity;
+import com.example.thestrongbox.Model.AESCrypt;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -70,7 +71,11 @@ public class UpdateAccountActivity extends AppCompatActivity {
                 String url = dataSnapshot.child("url").getValue().toString();
 
                 inputEmail.setText(email);
-                inputPassword.setText(password);
+                try {
+                    inputPassword.setText(AESCrypt.decrypt(password));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 inputNote.setText(note);
                 inputUrl.setText(url);
                 editButton.setText("Edit");
@@ -88,8 +93,15 @@ public class UpdateAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String note = inputNote.getText().toString();
                 String email = inputEmail.getText().toString();
-                String password = inputPassword.getText().toString();
+                String password_enc = inputPassword.getText().toString();
                 String url = inputUrl.getText().toString();
+
+                String password = null;
+                try {
+                    password = AESCrypt.encrypt(password_enc);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 saveInformation(email, note, password, url);
 

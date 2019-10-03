@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.thestrongbox.Home.MainActivity;
+import com.example.thestrongbox.Model.AESCrypt;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -67,10 +68,9 @@ public class AddAccountActivity extends AppCompatActivity {
 
     public void uploadAccount() {
         String email = inputEmail.getText().toString();
-        String password = inputPassword.getText().toString();
+        String password_enc = inputPassword.getText().toString();
         String note = inputNote.getText().toString();
         String url = inputUrl.getText().toString();
-
 
         if (TextUtils.isEmpty(email)){
             Toast.makeText(AddAccountActivity.this, "Oops! your Email can't be empty",Toast.LENGTH_SHORT).show();
@@ -80,6 +80,7 @@ public class AddAccountActivity extends AppCompatActivity {
             Toast.makeText(AddAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(url)){
             Toast.makeText(AddAccountActivity.this, "Oops! your Url can't be empty",Toast.LENGTH_SHORT).show();
+
         } else {
 
             DatabaseReference user_data_key = rootReference.child("users").child(UserId).child("data").push();
@@ -87,6 +88,13 @@ public class AddAccountActivity extends AppCompatActivity {
 
             HashMap<String, Object> strongBoxEntry_text_body = new HashMap<>();
             strongBoxEntry_text_body.put("email", email);
+
+            String password = null;
+            try {
+                password = AESCrypt.encrypt(password_enc);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             strongBoxEntry_text_body.put("password", password);
             strongBoxEntry_text_body.put("note", note);
             strongBoxEntry_text_body.put("url", url);
