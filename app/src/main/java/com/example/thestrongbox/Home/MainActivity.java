@@ -3,9 +3,14 @@ package com.example.thestrongbox.Home;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -175,7 +180,9 @@ public class MainActivity extends AppCompatActivity {
     private void AddAccountToList(final String dataKey, String Semail, String Spass, String Snote, String Surl) {
 
         LinearLayout new_window = new LinearLayout(this);
-        new_window.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 250));
+        LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 250);
+        wLayoutParams.setMargins(0,20,0,0);
+        new_window.setLayoutParams(wLayoutParams);
         new_window.setBackgroundColor(R.color.white);
         new_window.setBackgroundResource(R.drawable.layout_bg);
         new_window.setOrientation(0);
@@ -184,7 +191,9 @@ public class MainActivity extends AppCompatActivity {
         left_side.setLayoutParams(new LinearLayout.LayoutParams(900, LinearLayout.LayoutParams.MATCH_PARENT));
         left_side.setOrientation(1);
         LinearLayout right_side = new LinearLayout(this);
-        right_side.setLayoutParams(new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.MATCH_PARENT));
+        LinearLayout.LayoutParams rLayoutParams = new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.MATCH_PARENT);
+        rLayoutParams.setMargins(0,10,0,0);
+        right_side.setLayoutParams(rLayoutParams);
         right_side.setOrientation(1);
 
         new_window.addView(left_side);
@@ -195,13 +204,13 @@ public class MainActivity extends AppCompatActivity {
         TextView note_tv = new TextView(this);
         TextView url_tv = new TextView(this);
 
-        email_tv.setText("Email/User Name: " + Semail);
+        email_tv.setText(Html.fromHtml("<strong><em>" +"Email/User Name: " + "</em></strong>" + Semail));
         email_tv.setPadding(15,10,5,5);
-        pass_tv.setText("Password: " + Spass);
+        pass_tv.setText(Html.fromHtml("<strong><em>" +"Password: " + "</em></strong>" + Spass));
         pass_tv.setPadding(15,0,5,5);
-        note_tv.setText("Note: " + Snote);
+        note_tv.setText(Html.fromHtml("<strong><em>" +"Note: " + "</em></strong>" + Snote));
         note_tv.setPadding(15,0,5,5);
-        url_tv.setText("Url: " + Surl);
+        url_tv.setText(Html.fromHtml("<strong><em>" + "Url: " + "</em></strong>"+ Surl));
         url_tv.setPadding(15,0,5,10);
 
         left_side.addView(email_tv);
@@ -210,9 +219,10 @@ public class MainActivity extends AppCompatActivity {
         left_side.addView(url_tv);
 
         ImageButton removeBtn = new ImageButton(this);
-        removeBtn.setImageResource(R.drawable.ic_delete_forever_black_24dp);
+        removeBtn.setImageResource(R.drawable.remove_icon);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         removeBtn.setLayoutParams(lp);
+        removeBtn.setBackgroundColor(Color.WHITE);
         removeBtn.setPadding(0,40,0,0);
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,9 +233,11 @@ public class MainActivity extends AppCompatActivity {
         right_side.addView(removeBtn);
 
         ImageButton editBtn = new ImageButton(this);
-        editBtn.setImageResource(R.drawable.ic_edit_black_24dp);
+        editBtn.setImageResource(R.drawable.edit_icon);
         LinearLayout.LayoutParams lpE = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         editBtn.setLayoutParams(lpE);
+        editBtn.setBackgroundColor(Color.WHITE);
+//        editBtn.setPadding(0,10,0,0);
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
