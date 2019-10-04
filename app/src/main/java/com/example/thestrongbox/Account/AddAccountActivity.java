@@ -108,8 +108,6 @@ public class AddAccountActivity extends AppCompatActivity {
                     if (databaseError != null){
                         Log.e("Sending message", databaseError.getMessage());
                     }
-                    else
-                        Toast.makeText(AddAccountActivity.this, "Sorry! Update data failed",Toast.LENGTH_SHORT).show();
                 }
             });
             Intent mainIntent = new Intent(AddAccountActivity.this, MainActivity.class);
