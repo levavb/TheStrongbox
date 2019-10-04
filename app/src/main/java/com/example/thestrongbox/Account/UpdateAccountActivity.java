@@ -25,6 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.example.thestrongbox.R;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 
 public class UpdateAccountActivity extends AppCompatActivity {
@@ -123,6 +126,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         } else if (TextUtils.isEmpty(url)){
             Toast.makeText(UpdateAccountActivity.this, "Oops! your Url can't be empty",Toast.LENGTH_SHORT).show();
         } else {
+            UpdateDatabaseReference.child("date").setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
             UpdateDatabaseReference.child("email").setValue(email);
             UpdateDatabaseReference.child("url").setValue(url);
             UpdateDatabaseReference.child("note").setValue(note);

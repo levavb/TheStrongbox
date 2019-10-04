@@ -33,7 +33,7 @@
                 android:background="@color/gray"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="105dp">
+                android:paddingBottom="105dp" >
 
             </LinearLayout>
         </RelativeLayout>

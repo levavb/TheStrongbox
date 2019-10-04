@@ -22,7 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import com.example.thestrongbox.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class AddAccountActivity extends AppCompatActivity {
 
@@ -98,6 +101,7 @@ public class AddAccountActivity extends AppCompatActivity {
             strongBoxEntry_text_body.put("password", password_enc);
             strongBoxEntry_text_body.put("note", note);
             strongBoxEntry_text_body.put("url", url);
+            strongBoxEntry_text_body.put("date", new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
 
             HashMap<String, Object> dataBodyDetails = new HashMap<>();
             dataBodyDetails.put( "users/" + UserId + "/data/" + data_push_id , strongBoxEntry_text_body);

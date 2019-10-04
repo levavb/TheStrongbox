@@ -103,7 +103,6 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     private void saveInformation(String uName, String uPhone) {
-        Toast.makeText(SettingsActivity.this, "hahahah2",Toast.LENGTH_SHORT).show();
         if (TextUtils.isEmpty(uName)){
             Toast.makeText(SettingsActivity.this, "Oops! your name can't be empty",Toast.LENGTH_SHORT).show();
         } else if (uName.length()<3 || uName.length()>40){

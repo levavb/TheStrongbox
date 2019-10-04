@@ -12,6 +12,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
@@ -37,6 +39,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,14 +66,11 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
-        String user_id = mAuth.getCurrentUser().getUid();
-        UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id).child("data");
-
         if (currentUser != null){
             String user_uID = mAuth.getCurrentUser().getUid();
 
-            userDatabaseReference = FirebaseDatabase.getInstance().getReference()
-                    .child("users").child(user_uID);
+            userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID);
+            UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID).child("data");
         }
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
 
@@ -148,16 +152,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayAllAccounts() {
 
-        UserDataInDatabaseReference.addValueEventListener(new ValueEventListener() {
+        userDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     RootLayout.removeAllViews();
-                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
+                    for (DataSnapshot postSnapshot: dataSnapshot.child("data").getChildren()) {
 
                         String Semail = postSnapshot.child("email").getValue().toString();
                         String Spass_enc = postSnapshot.child("password").getValue().toString();
                         String Snote = postSnapshot.child("note").getValue().toString();
                         String Surl = postSnapshot.child("url").getValue().toString();
+                        String Sdate = postSnapshot.child("date").getValue().toString();
 
 
                         String Spass = null;
@@ -166,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl);
+                        AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl, Sdate);
                     }
                 }
                 @Override
@@ -177,18 +183,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
-    private void AddAccountToList(final String dataKey, String Semail, String Spass, String Snote, String Surl) {
+    private void AddAccountToList(final String dataKey, String Semail, String Spass, String Snote, String Surl, String Sdate) {
 
         LinearLayout new_window = new LinearLayout(this);
-        LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 250);
-        wLayoutParams.setMargins(0,20,0,0);
+        LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
+        wLayoutParams.setMargins(0,15,0,0);
         new_window.setLayoutParams(wLayoutParams);
         new_window.setBackgroundColor(R.color.white);
         new_window.setBackgroundResource(R.drawable.layout_bg);
         new_window.setOrientation(0);
 
         LinearLayout left_side = new LinearLayout(this);
-        left_side.setLayoutParams(new LinearLayout.LayoutParams(900, LinearLayout.LayoutParams.MATCH_PARENT));
+        left_side.setLayoutParams(new LinearLayout.LayoutParams(850, LinearLayout.LayoutParams.MATCH_PARENT));
         left_side.setOrientation(1);
         LinearLayout right_side = new LinearLayout(this);
         LinearLayout.LayoutParams rLayoutParams = new LinearLayout.LayoutParams(200, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -203,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
         TextView pass_tv = new TextView(this);
         TextView note_tv = new TextView(this);
         TextView url_tv = new TextView(this);
+        TextView date_tv = new TextView(this);
 
         email_tv.setText(Html.fromHtml("<strong><em>" +"Email/User Name: " + "</em></strong>" + Semail));
         email_tv.setPadding(15,10,5,5);
@@ -215,29 +222,28 @@ public class MainActivity extends AppCompatActivity {
 
         left_side.addView(email_tv);
         left_side.addView(pass_tv);
-        left_side.addView(note_tv);
         left_side.addView(url_tv);
+        left_side.addView(note_tv);
 
         ImageButton removeBtn = new ImageButton(this);
         removeBtn.setImageResource(R.drawable.remove_icon);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(95,0,0,0);
         removeBtn.setLayoutParams(lp);
         removeBtn.setBackgroundColor(Color.WHITE);
-        removeBtn.setPadding(0,40,0,0);
         removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteEntry(dataKey);
             }
         });
-        right_side.addView(removeBtn);
 
         ImageButton editBtn = new ImageButton(this);
         editBtn.setImageResource(R.drawable.edit_icon);
         LinearLayout.LayoutParams lpE = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpE.setMargins(95,0,0,0);
         editBtn.setLayoutParams(lpE);
         editBtn.setBackgroundColor(Color.WHITE);
-//        editBtn.setPadding(0,10,0,0);
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,8 +252,64 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        date_tv.setText(Sdate);
+        date_tv.setTextSize(12);
+        date_tv.setPadding(0,10,0,0);
+
+        right_side.addView(removeBtn);
         right_side.addView(editBtn);
+        right_side.addView(date_tv);
 
         RootLayout.addView(new_window);
     }
+
+    @SuppressLint({"ResourceAsColor", "WrongConstant"})
+    private void addWellcomeBubble(String UserName) {
+
+        LinearLayout new_window = new LinearLayout(this);
+        LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 350);
+        wLayoutParams.setMargins(0,10,0,0);
+        new_window.setLayoutParams(wLayoutParams);
+        new_window.setBackgroundColor(R.color.white);
+        new_window.setBackgroundResource(R.drawable.layout_bg);
+        new_window.setOrientation(1);
+
+        TextView welcome_tv = new TextView(this);
+        TextView part_day_tv = new TextView(this);
+//        TextView note_tv = new TextView(this);
+//        TextView url_tv = new TextView(this);
+        welcome_tv.setText("Wellcome " + UserName);
+        welcome_tv.setGravity(Gravity.CENTER);
+        welcome_tv.setTextColor(Color.rgb(178,34,34));
+        welcome_tv.setTextSize(32);
+
+        part_day_tv.setText(getBlessingDayText());
+        part_day_tv.setGravity(Gravity.CENTER);
+        part_day_tv.setTextColor(Color.rgb(178,34,34));
+        part_day_tv.setTextSize(18);
+
+        new_window.addView(welcome_tv);
+        new_window.addView(part_day_tv);
+
+        RootLayout.addView(new_window);
+    }
+
+    private String getBlessingDayText() {
+
+        int cur_hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        String blessingText = "";
+        if ( cur_hour >= 6 && cur_hour < 12 ) {
+            blessingText = "Good Morning";
+        } else if ( cur_hour >= 12 && cur_hour < 18) {
+            blessingText = "Good Afternoon";
+        } else if ( cur_hour >= 18 && cur_hour < 22) {
+            blessingText = "Good Evening";
+        } else if ( (cur_hour >= 22 && cur_hour <= 24) | (cur_hour >= 0 && cur_hour < 6)){
+            blessingText = "Good Night";
+        }
+        return blessingText;
+    }
+
+
 }
