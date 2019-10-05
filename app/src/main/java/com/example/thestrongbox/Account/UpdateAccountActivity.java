@@ -8,10 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.thestrongbox.Class.AutoSuggestAdapter;
 import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.AESCrypt;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +28,10 @@ import com.example.thestrongbox.R;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -39,7 +44,8 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
     private String UserId;
     private Button editButton;
-    private EditText inputEmail, inputPassword, inputNote, inputUrl;
+    private EditText inputEmail, inputPassword, inputNote;
+    AutoCompleteTextView inputUrl;
     private Toolbar aToolbar;
 
     @Override
@@ -64,6 +70,12 @@ public class UpdateAccountActivity extends AppCompatActivity {
         inputUrl = findViewById(R.id.inputUrl);
         editButton = findViewById(R.id.AddButton);
 
+        // Get the string array
+        List<String> urls = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.url_array)));
+        // Create the adapter and set it to the AutoCompleteTextView
+        AutoSuggestAdapter adapter = new AutoSuggestAdapter(this, android.R.layout.simple_list_item_1, urls);
+        inputUrl.setAdapter(adapter);
+        inputUrl.setThreshold(1);
 
         UpdateDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override

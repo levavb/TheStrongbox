@@ -40,7 +40,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/inputEmail"
-                android:hint=" Email"
+                android:hint=" Email/User Name"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -64,15 +64,12 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            >
-            <EditText
+            android:paddingBottom="16dp">
+            <android.support.v7.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/inputUrl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint=" Url"
-                android:id="@+id/inputUrl"
-                />
+                android:hint="Url"/>
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

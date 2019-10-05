@@ -2,4 +2,18 @@
     <string name="app_name">The Strongbox</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="about_text">This application is built for Android Project.\n</string>
+
+
+    <string-array name="url_array">
+        <item>www.gmail.com</item>
+        <item>www.facebook.com</item>
+        <item>www.instagram.com</item>
+        <item>www.github.com</item>
+        <item>www.bitgroup.co.il</item>
+        <item>www.netflix.com</item>
+        <item>www.discountbank.co.il</item>
+        <item>www.bankhapoalim.co.il</item>
+        <item>www.telhai.ac.il</item>
+        <item>www.ebay.com</item>
+    </string-array>
 </resources>
