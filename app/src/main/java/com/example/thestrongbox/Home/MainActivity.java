@@ -4,13 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,7 +19,6 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
@@ -37,13 +34,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -183,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
-    private void AddAccountToList(final String dataKey, String Semail, String Spass, String Snote, String Surl, String Sdate) {
+    private void AddAccountToList(final String dataKey, String Semail, String Spass, String Snote, final String Surl, String Sdate) {
 
         LinearLayout new_window = new LinearLayout(this);
         LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
@@ -213,12 +206,23 @@ public class MainActivity extends AppCompatActivity {
 
         email_tv.setText(Html.fromHtml("<strong><em>" +"Email/User Name: " + "</em></strong>" + Semail));
         email_tv.setPadding(15,10,5,5);
+        email_tv.setTextIsSelectable(true);
         pass_tv.setText(Html.fromHtml("<strong><em>" +"Password: " + "</em></strong>" + Spass));
         pass_tv.setPadding(15,0,5,5);
+        pass_tv.setTextIsSelectable(true);
         note_tv.setText(Html.fromHtml("<strong><em>" +"Note: " + "</em></strong>" + Snote));
         note_tv.setPadding(15,0,5,5);
-        url_tv.setText(Html.fromHtml("<strong><em>" + "Url: " + "</em></strong>"+ Surl));
+        note_tv.setTextIsSelectable(true);
+        url_tv.setText(Html.fromHtml("<strong><em>" + "Url: " + "</em></strong>"+ "<a href="+ "" + ">" + Surl + "</a>"));
         url_tv.setPadding(15,0,5,10);
+        url_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_url = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + Surl));
+                startActivity(intent_url);
+            }
+        });
+
 
         left_side.addView(email_tv);
         left_side.addView(pass_tv);
@@ -308,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
         } else if ( (cur_hour >= 22 && cur_hour <= 24) | (cur_hour >= 0 && cur_hour < 6)){
             blessingText = "Good Night";
         }
+
         return blessingText;
     }
 
