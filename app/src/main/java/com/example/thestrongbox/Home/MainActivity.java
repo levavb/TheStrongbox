@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
+import com.example.thestrongbox.LoginReg.RegisterActivity;
 import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
@@ -35,8 +37,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Calendar;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -278,8 +287,7 @@ public class MainActivity extends AppCompatActivity {
 
         TextView welcome_tv = new TextView(this);
         TextView part_day_tv = new TextView(this);
-//        TextView note_tv = new TextView(this);
-//        TextView url_tv = new TextView(this);
+
         welcome_tv.setText("Wellcome " + UserName);
         welcome_tv.setGravity(Gravity.CENTER);
         welcome_tv.setTextColor(Color.rgb(178,34,34));
@@ -290,10 +298,57 @@ public class MainActivity extends AppCompatActivity {
         part_day_tv.setTextColor(Color.rgb(178,34,34));
         part_day_tv.setTextSize(18);
 
+        LinearLayout joke_ll = new LinearLayout(this);
+        LinearLayout.LayoutParams jLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        joke_ll.setLayoutParams(jLayoutParams);
+        joke_ll.setOrientation(0);
+        joke_ll.setGravity(Gravity.CENTER);
+
+        TextView get_joke_tv = new TextView(this);
+        get_joke_tv.setText("To improve your day: ");
+        get_joke_tv.setTextColor(Color.BLACK);
+        get_joke_tv.setTextSize(20);
+
+        ImageButton joke_btn = new ImageButton(this);
+        joke_btn.setImageResource(R.drawable.tap);
+        LinearLayout.LayoutParams lpJ = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        joke_btn.setLayoutParams(lpJ);
+        joke_btn.setBackgroundColor(Color.WHITE);
+        joke_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getAndDisplayJoke();
+            }
+        });
+
+        joke_ll.addView(get_joke_tv);
+        joke_ll.addView(joke_btn);
+
         new_window.addView(welcome_tv);
         new_window.addView(part_day_tv);
+        new_window.addView(joke_ll);
 
         RootLayout.addView(new_window);
+    }
+
+    private void getAndDisplayJoke() {
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        client.get("http://api.icndb.com/jokes/random",new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int status, Header[] header, JSONObject response) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.joke_popup, null);
+                TextView tv = view.getRootView().findViewById(R.id.jokeMessage);
+                try {
+                    tv.setText(response.getJSONObject("value").getString("joke"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                builder.setView(view);
+                builder.show();
+            }
+        });
     }
 
     private String getBlessingDayText() {
