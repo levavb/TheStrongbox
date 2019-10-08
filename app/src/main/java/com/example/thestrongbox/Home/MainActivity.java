@@ -20,7 +20,6 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
@@ -29,7 +28,6 @@ import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
-import com.example.thestrongbox.Search.SearchActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -85,10 +83,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.menu_search){
-            Intent intent =  new Intent(MainActivity.this, SearchActivity.class);
-            startActivity(intent);
-        }
 
         if (item.getItemId() == R.id.profile_settings){
             Intent intent =  new Intent(MainActivity.this, SettingsActivity.class);

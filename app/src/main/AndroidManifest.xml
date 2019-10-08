@@ -41,10 +41,6 @@
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".Home.MainActivity"/>
         <activity
-            android:name=".Search.SearchActivity"
-            android:configChanges="orientation|screenSize"
-            android:parentActivityName=".Home.MainActivity"/>
-        <activity
         android:name=".Account.AddAccountActivity"
         android:configChanges="orientation|screenSize"
         android:parentActivityName=".Home.MainActivity"/>
