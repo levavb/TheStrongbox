@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginReg.RegisterActivity">
+<include
+    android:id="@+id/register_page_toolbar"
+    layout="@layout/all_app_bar_layout" />
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="50dp">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,18 +24,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="25dp"
-            android:paddingTop="40dp"
+            android:paddingTop="20dp"
             android:paddingRight="25dp"
             android:paddingBottom="50dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="CREATE NEW ACCOUNT"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -32,9 +34,9 @@
                 android:layout_gravity="center"
                 android:paddingLeft="2dp"
                 android:paddingTop="4dp"
-                android:paddingBottom="20dp"
                 android:paddingRight="2dp"
-                android:text="Please your give correct information. Because, your email &amp; phone number needs to be verification."
+                android:paddingBottom="20dp"
+                android:text="Please your give correct information. Because, your email needs to be verification."
                 android:textAlignment="center" />
 
             <android.support.design.widget.TextInputLayout
@@ -130,3 +132,4 @@
 
     </RelativeLayout>
 </ScrollView>
+</android.support.constraint.ConstraintLayout>

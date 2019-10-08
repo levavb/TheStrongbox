@@ -8,13 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.example.thestrongbox.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Timer;
@@ -34,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
     private Context myContext = RegisterActivity.this;
-
+    private Toolbar mToolbar;
 
     private EditText
             registerUserFullName,
@@ -56,7 +55,11 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        Log.d(TAG, "on Create : started");
+
+        mToolbar = findViewById(R.id.register_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Create New Account");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
@@ -92,19 +95,12 @@ public class RegisterActivity extends AppCompatActivity {
         //Validation for empty fields
         if (TextUtils.isEmpty(name)) {
             Toast.makeText(myContext, "Your name is required.", Toast.LENGTH_SHORT).show();
-        } else if (name.length() < 3 || name.length() > 40){
-            Toast.makeText(myContext, "Your name should be 3 to 40 numbers of characters.", Toast.LENGTH_SHORT).show();
-
+        } else if (name.length() < 3 || name.length() > 12){
+            Toast.makeText(myContext, "Your name should be 3 to 12 numbers of characters.", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(email)){
             Toast.makeText(myContext, "Your email is required.", Toast.LENGTH_SHORT).show();
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             Toast.makeText(myContext, "Your email is not valid.", Toast.LENGTH_SHORT).show();
-
-        } else if (TextUtils.isEmpty(mobile)){
-            Toast.makeText(myContext, "Your mobile number is required.", Toast.LENGTH_SHORT).show();
-        } else if (mobile.length() < 10){
-            Toast.makeText(myContext, "Mobile number should be min 10 characters.", Toast.LENGTH_SHORT).show();
-
         } else if (TextUtils.isEmpty(password)){
             Toast.makeText(myContext, "Please fill this password field", Toast.LENGTH_SHORT).show();
         } else if (password.length() < 6){
@@ -121,16 +117,13 @@ public class RegisterActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Toast.makeText(myContext, "1", Toast.LENGTH_SHORT).show();
                             if (task.isSuccessful()){
                                 String deviceToken = FirebaseInstanceId.getInstance().getToken();
-                                Toast.makeText(myContext, "2", Toast.LENGTH_SHORT).show();
                                 // get and link storage
                                 String current_userID =  mAuth.getCurrentUser().getUid();
                                 storeDefaultDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(current_userID);
                                 storeDefaultDatabaseReference.child("user_name").setValue(name);
                                 storeDefaultDatabaseReference.child("verified").setValue("false");
-                                storeDefaultDatabaseReference.child("search_name").setValue(name.toLowerCase());
                                 storeDefaultDatabaseReference.child("user_mobile").setValue(mobile);
                                 storeDefaultDatabaseReference.child("user_email").setValue(email);
                                 storeDefaultDatabaseReference.child("device_token").setValue(deviceToken);

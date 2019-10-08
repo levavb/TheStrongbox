@@ -95,8 +95,8 @@ public class SearchActivity extends AppCompatActivity {
      *  Library link- https://github.com/firebase/FirebaseUI-Android
      */
     private void searchPeopleProfile(final String searchString) {
-        final Query searchQuery = peoplesDatabaseReference.orderByChild("search_name")
-                .startAt(searchString).endAt(searchString + "\uf8ff");
+//        final Query searchQuery = peoplesDatabaseReference.orderByChild("search_name")
+//                .startAt(searchString).endAt(searchString + "\uf8ff");
         //final Query searchQuery = peoplesDatabaseReference.orderByChild("search_name").equalTo(searchString);
 /*
         FirebaseRecyclerOptions<ProfileInfo> recyclerOptions = new FirebaseRecyclerOptions.Builder<ProfileInfo>()

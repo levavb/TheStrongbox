@@ -58,16 +58,15 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+        RootLayout = (LinearLayout) findViewById(R.id.main_layout);
 
         if (currentUser != null){
             String user_uID = mAuth.getCurrentUser().getUid();
 
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID);
             UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID).child("data");
+            displayAllAccounts();
         }
-        RootLayout = (LinearLayout) findViewById(R.id.main_layout);
-
-        displayAllAccounts();
     }
 
     public void deleteEntry(String entryId) {

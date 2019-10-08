@@ -105,15 +105,10 @@ public class SettingsActivity extends AppCompatActivity {
     private void saveInformation(String uName, String uPhone) {
         if (TextUtils.isEmpty(uName)){
             Toast.makeText(SettingsActivity.this, "Oops! your name can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (uName.length()<3 || uName.length()>40){
-            Toast.makeText(SettingsActivity.this, "Your name should be 3 to 40 numbers of characters",Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(uPhone)){
-            Toast.makeText(SettingsActivity.this, "Your mobile number is required.",Toast.LENGTH_SHORT).show();
-        } else if (uPhone.length()<10){
-            Toast.makeText(SettingsActivity.this, "Sorry! your mobile number is too short",Toast.LENGTH_SHORT).show();
+        } else if (uName.length()<3 || uName.length()>12){
+            Toast.makeText(SettingsActivity.this, "Your name should be 3 to 12 numbers of characters",Toast.LENGTH_SHORT).show();
         } else {
             getUserDatabaseReference.child("user_name").setValue(uName);
-            getUserDatabaseReference.child("search_name").setValue(uName.toLowerCase());
             getUserDatabaseReference.child("user_mobile").setValue(uPhone)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
