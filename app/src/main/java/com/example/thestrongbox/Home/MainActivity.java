@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
@@ -217,8 +219,10 @@ public class MainActivity extends AppCompatActivity {
         url_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent_url = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + Surl));
-                startActivity(intent_url);
+                if (!TextUtils.isEmpty(Surl)) {
+                    Intent intent_url = new Intent(Intent.ACTION_VIEW,Uri.parse("http://" + Surl));
+                    startActivity(intent_url);
+                }
             }
         });
 

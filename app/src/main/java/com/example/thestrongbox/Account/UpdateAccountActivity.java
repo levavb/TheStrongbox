@@ -109,15 +109,8 @@ public class UpdateAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String note = inputNote.getText().toString();
                 String email = inputEmail.getText().toString();
-                String password_enc = inputPassword.getText().toString();
+                String password = inputPassword.getText().toString();
                 String url = inputUrl.getText().toString();
-
-                String password = null;
-                try {
-                    password = AESCrypt.encrypt(password_enc);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
                 saveInformation(email, note, password, url);
 
@@ -131,18 +124,29 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)){
             Toast.makeText(UpdateAccountActivity.this, "Oops! your Email can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(note)){
-            Toast.makeText(UpdateAccountActivity.this, "Oops! your Note can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (email.length() > 25) {
+            Toast.makeText(UpdateAccountActivity.this, "Your Email/User Name should be 1 to 25 numbers of characters.", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(password)){
             Toast.makeText(UpdateAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(url)){
-            Toast.makeText(UpdateAccountActivity.this, "Oops! your Url can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (password.length() > 30){
+            Log.d("LEVAV","NUM PASS: " + password.length());
+            Toast.makeText(UpdateAccountActivity.this, "Your Password should be 1 to 30 numbers of characters.",Toast.LENGTH_SHORT).show();
+        } else if (url.length() > 35){
+            Toast.makeText(UpdateAccountActivity.this, "Your Url should be 1 to 35 numbers of characters.",Toast.LENGTH_SHORT).show();
         } else {
+
+            String password_enc = null;
+            try {
+                password_enc = AESCrypt.encrypt(password);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             UpdateDatabaseReference.child("date").setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
             UpdateDatabaseReference.child("email").setValue(email);
             UpdateDatabaseReference.child("url").setValue(url);
             UpdateDatabaseReference.child("note").setValue(note);
-            UpdateDatabaseReference.child("password").setValue(password)
+            UpdateDatabaseReference.child("password").setValue(password_enc)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

@@ -90,13 +90,14 @@ public class AddAccountActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email)){
             Toast.makeText(AddAccountActivity.this, "Oops! your Email can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(note)){
-            Toast.makeText(AddAccountActivity.this, "Oops! your Note can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (email.length() > 25) {
+            Toast.makeText(AddAccountActivity.this, "Your Email/User Name should be 1 to 25 numbers of characters.", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(password)){
-            Toast.makeText(AddAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(url)){
-            Toast.makeText(AddAccountActivity.this, "Oops! your Url can't be empty",Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(AddAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
+        } else if (password.length() > 30){
+            Toast.makeText(AddAccountActivity.this, "Your Password should be 1 to 30 numbers of characters.",Toast.LENGTH_SHORT).show();
+        } else if (url.length() > 35){
+            Toast.makeText(AddAccountActivity.this, "Your Url should be 1 to 35 numbers of characters.",Toast.LENGTH_SHORT).show();
         } else {
 
             DatabaseReference user_data_key = rootReference.child("users").child(UserId).child("data").push();
