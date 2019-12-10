@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,8 +25,8 @@ import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
-import com.example.thestrongbox.LoginReg.RegisterActivity;
 import com.example.thestrongbox.Model.AESCrypt;
+import com.example.thestrongbox.Model.CryptoHash;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +42,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
@@ -56,12 +56,10 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference userDatabaseReference;
     public FirebaseUser currentUser;
     private DatabaseReference UserDataInDatabaseReference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
 
@@ -75,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID);
             UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID).child("data");
             displayAllAccounts();
+        }
+        try {
+            CryptoHash.getSha256("1");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
     }
 
@@ -165,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String Spass = null;
                         try {
-                            Spass = AESCrypt.decrypt(Spass_enc);
+                            Spass = AESCrypt.decrypt(Spass_enc, CryptoHash.getSha256("12345678"));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

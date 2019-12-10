@@ -12,9 +12,9 @@ public class AESCrypt
     private static final String ALGORITHM = "AES";
     private static final String KEY = "1Hbfh667adfDEJ78";
 
-    public static String encrypt(String value) throws Exception
+    public static String encrypt(String value, byte[] masterKey) throws Exception
     {
-        Key key = generateKey();
+        Key key = generateKey(masterKey);
         Cipher cipher = Cipher.getInstance(AESCrypt.ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         byte [] encryptedByteValue = cipher.doFinal(value.getBytes("utf-8"));
@@ -23,9 +23,9 @@ public class AESCrypt
 
     }
 
-    public static String decrypt(String value) throws Exception
+    public static String decrypt(String value, byte[] masterKey) throws Exception
     {
-        Key key = generateKey();
+        Key key = generateKey(masterKey);
         Cipher cipher = Cipher.getInstance(AESCrypt.ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, key);
         byte[] decryptedValue64 = Base64.decode(value, Base64.DEFAULT);
@@ -35,9 +35,9 @@ public class AESCrypt
 
     }
 
-    private static Key generateKey() throws Exception
+    private static Key generateKey(byte[] masterKey) throws Exception
     {
-        Key key = new SecretKeySpec(AESCrypt.KEY.getBytes(),AESCrypt.ALGORITHM);
+        Key key = new SecretKeySpec(masterKey,AESCrypt.ALGORITHM);
         return key;
     }
 }

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.thestrongbox.Class.AutoSuggestAdapter;
 import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.AESCrypt;
+import com.example.thestrongbox.Model.CryptoHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -88,7 +89,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
                 inputEmail.setText(email);
                 try {
-                    inputPassword.setText(AESCrypt.decrypt(password));
+                    inputPassword.setText(AESCrypt.decrypt(password, CryptoHash.getSha256("12345678")));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -137,7 +138,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
             String password_enc = null;
             try {
-                password_enc = AESCrypt.encrypt(password);
+                password_enc = AESCrypt.encrypt(password, CryptoHash.getSha256("12345678"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

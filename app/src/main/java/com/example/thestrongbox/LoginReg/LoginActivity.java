@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.thestrongbox.ForgotPassword.ForgotPassActivity;
 import com.example.thestrongbox.Home.MainActivity;
+import com.example.thestrongbox.Model.CryptoHash;
 import com.example.thestrongbox.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 public class LoginActivity extends AppCompatActivity {
@@ -108,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loginUserAccount(String email, String password) {
+    private void loginUserAccount(String email, final String password) {
         //just validation
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Email is required",Toast.LENGTH_SHORT).show();
@@ -138,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                checkVerifiedEmail();
+                                                    checkVerifiedEmail();
                                             }
                                         });
 

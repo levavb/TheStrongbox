@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.thestrongbox.Class.AutoSuggestAdapter;
 import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.AESCrypt;
+import com.example.thestrongbox.Model.CryptoHash;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
@@ -108,7 +109,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
             String password_enc = null;
             try {
-                password_enc = AESCrypt.encrypt(password);
+                password_enc = AESCrypt.encrypt(password, CryptoHash.getSha256("12345678"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
