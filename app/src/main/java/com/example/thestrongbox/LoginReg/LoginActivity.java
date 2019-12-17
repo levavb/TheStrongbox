@@ -106,6 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = userPassword.getText().toString();
 
                 loginUserAccount(email, password);
+
             }
         });
     }
@@ -135,8 +136,8 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 // these lines for taking DEVICE TOKEN for sending device to device notification
                                 String userUID = mAuth.getCurrentUser().getUid();
-                                String userDeiceToken = FirebaseInstanceId.getInstance().getToken();
-                                userDatabaseReference.child(userUID).child("device_token").setValue(userDeiceToken)
+                                String userDeviceToken = FirebaseInstanceId.getInstance().getToken();
+                                userDatabaseReference.child(userUID).child("device_token").setValue(userDeviceToken)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -148,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, "Your email and password may be incorrect. Please check & try again.",Toast.LENGTH_SHORT).show();
                             }
 
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
 
                         }
                     });
@@ -165,11 +166,13 @@ public class LoginActivity extends AppCompatActivity {
         if (isVerified){
             String UID = mAuth.getCurrentUser().getUid();
             userDatabaseReference.child(UID).child("verified").setValue("true");
-
+            String password = userPassword.getText().toString();
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("USER_PASS", password);
             startActivity(intent);
             finish();
+
         } else {
             Toast.makeText(LoginActivity.this, "Email is not verified. Please verify first",Toast.LENGTH_SHORT).show();
             mAuth.signOut();

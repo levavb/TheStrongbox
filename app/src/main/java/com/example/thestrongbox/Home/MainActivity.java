@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
     private LinearLayout RootLayout;
+    byte[] UserSHA;
     //Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference userDatabaseReference;
@@ -62,23 +63,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
+        UserSHA = new byte[16];
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
+        try {
+            String pass = getIntent().getStringExtra("USER_PASS");
+            UserSHA = CryptoHash.getSha256(pass);
+            pass = "";
+            getIntent().removeExtra("USER_PASS");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         if (currentUser != null){
             String user_uID = mAuth.getCurrentUser().getUid();
 
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID);
             UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID).child("data");
+
             displayAllAccounts();
         }
-        try {
-            CryptoHash.getSha256("1");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void deleteEntry(String entryId) {
@@ -147,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
     public void MoveToPageAddAccount(View view) {
 
         Intent intent = new Intent(MainActivity.this, AddAccountActivity.class);
+        intent.putExtra("USER_SHA", UserSHA);
         startActivity(intent);
     }
 
@@ -168,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String Spass = null;
                         try {
-                            Spass = AESCrypt.decrypt(Spass_enc, CryptoHash.getSha256("12345678"));
+                            Spass = AESCrypt.decrypt(Spass_enc, UserSHA);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
