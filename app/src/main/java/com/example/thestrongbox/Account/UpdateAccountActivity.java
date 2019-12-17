@@ -89,7 +89,8 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
                 inputEmail.setText(email);
                 try {
-                    inputPassword.setText(AESCrypt.decrypt(password, CryptoHash.getSha256("12345678")));
+                    byte[] user_sha = getIntent().getByteArrayExtra("USER_SHA");
+                    inputPassword.setText(AESCrypt.decrypt(password, user_sha));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,7 +139,8 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
             String password_enc = null;
             try {
-                password_enc = AESCrypt.encrypt(password, CryptoHash.getSha256("12345678"));
+                byte[] user_sha = getIntent().getByteArrayExtra("USER_SHA");
+                password_enc = AESCrypt.encrypt(password, user_sha);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -159,6 +161,8 @@ public class UpdateAccountActivity extends AppCompatActivity {
                     Log.d("UpdateDB:", "Failed");
                 }
             });
+            getIntent().putExtra("USER_SHA","");
+            getIntent().removeExtra("USER_SHA");
             Intent mainIntent = new Intent(UpdateAccountActivity.this, MainActivity.class);
             startActivity(mainIntent);
         }

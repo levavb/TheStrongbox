@@ -109,8 +109,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
             String password_enc = null;
             try {
-                byte[] user_sha = new byte[16];
-                user_sha = getIntent().getByteArrayExtra("USER_SHA");
+                byte[] user_sha = getIntent().getByteArrayExtra("USER_SHA");
                 password_enc = AESCrypt.encrypt(password, user_sha);
             } catch (Exception e) {
                 e.printStackTrace();
