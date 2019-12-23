@@ -21,4 +21,8 @@ public class CryptoHash {
         return digest;
     }
 
+    public static byte[] emptySHA() {
+        return "0000000000000000".getBytes();
+    }
+
 }

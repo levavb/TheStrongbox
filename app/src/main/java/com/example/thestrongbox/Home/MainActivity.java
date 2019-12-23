@@ -5,9 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -132,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("YES, Log out", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    mAuth.signOut();
                     logOutUser();
                 }
             });
@@ -142,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
     public void logOutUser() {
+        UserSHA = CryptoHash.emptySHA();
         mAuth.signOut();
         Intent loginIntent =  new Intent(MainActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -380,5 +381,51 @@ public class MainActivity extends AppCompatActivity {
         return blessingText;
     }
 
+    public static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
 
+    private Handler disconnectHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            return true;
+        }
+    });
+
+    private Runnable disconnectCallback = new Runnable() {
+        @Override
+        public void run() {
+            stopDisconnectTimer();
+            SwitchToLogin = true;
+            logOutUser();
+        }
+    };
+
+    private boolean SwitchToLogin = false;
+
+    public void resetDisconnectTimer(){
+        disconnectHandler.removeCallbacks(disconnectCallback);
+        disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
+    }
+
+    public void stopDisconnectTimer(){
+        disconnectHandler.removeCallbacks(null);
+    }
+
+    @Override
+    public void onUserInteraction(){
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        resetDisconnectTimer();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (!SwitchToLogin) {
+            resetDisconnectTimer();
+        }
+    }
 }
