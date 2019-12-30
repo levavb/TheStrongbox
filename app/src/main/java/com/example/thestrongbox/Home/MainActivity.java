@@ -71,6 +71,7 @@ public class MainActivity extends MyBaseActivity {
             String pass = getIntent().getStringExtra("USER_PASS");
             MasterKey = CryptoHash.getSha256(pass);
             pass = "";
+            getIntent().putExtra("USER_PASS", "");
             getIntent().removeExtra("USER_PASS");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
