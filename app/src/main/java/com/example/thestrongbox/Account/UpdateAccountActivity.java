@@ -3,7 +3,6 @@ package com.example.thestrongbox.Account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,11 +15,10 @@ import android.widget.Toast;
 import com.example.thestrongbox.Class.AutoSuggestAdapter;
 import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.AESCrypt;
-import com.example.thestrongbox.Model.CryptoHash;
+import com.example.thestrongbox.Model.MyBaseActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,12 +34,11 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class UpdateAccountActivity extends AppCompatActivity {
+public class UpdateAccountActivity extends MyBaseActivity {
 
     private static final String TAG = "UpdateAccountActivity";
 
     private DatabaseReference UpdateDatabaseReference;
-    private FirebaseAuth Auth;
 
     private String UserId;
     private Button editButton;
@@ -59,8 +56,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Update Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Auth = FirebaseAuth.getInstance();
-        String user_id = Auth.getCurrentUser().getUid();
+        String user_id = mAuth.getCurrentUser().getUid();
         String entry_id = getIntent().getStringExtra("entryId");
         UpdateDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id).child("data").child(entry_id);
 
@@ -89,8 +85,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
                 inputEmail.setText(email);
                 try {
-                    byte[] user_sha = getIntent().getByteArrayExtra("USER_SHA");
-                    inputPassword.setText(AESCrypt.decrypt(password, user_sha));
+                    inputPassword.setText(AESCrypt.decrypt(password, MasterKey));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -139,8 +134,7 @@ public class UpdateAccountActivity extends AppCompatActivity {
 
             String password_enc = null;
             try {
-                byte[] user_sha = getIntent().getByteArrayExtra("USER_SHA");
-                password_enc = AESCrypt.encrypt(password, user_sha);
+                password_enc = AESCrypt.encrypt(password, MasterKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -161,8 +155,6 @@ public class UpdateAccountActivity extends AppCompatActivity {
                     Log.d("UpdateDB:", "Failed");
                 }
             });
-            getIntent().putExtra("USER_SHA","");
-            getIntent().removeExtra("USER_SHA");
             Intent mainIntent = new Intent(UpdateAccountActivity.this, MainActivity.class);
             startActivity(mainIntent);
         }

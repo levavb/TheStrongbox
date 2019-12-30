@@ -5,9 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
+import com.example.thestrongbox.Model.MyBaseActivity;
 import com.example.thestrongbox.R;
 
-public class AboutAppActivity extends AppCompatActivity {
+public class AboutAppActivity extends MyBaseActivity {
 
     private Toolbar mToolbar;
 

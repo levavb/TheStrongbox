@@ -3,7 +3,6 @@ package com.example.thestrongbox.Account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,8 +15,7 @@ import android.widget.Toast;
 import com.example.thestrongbox.Class.AutoSuggestAdapter;
 import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.AESCrypt;
-import com.example.thestrongbox.Model.CryptoHash;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.thestrongbox.Model.MyBaseActivity;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,11 +31,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class AddAccountActivity extends AppCompatActivity {
+public class AddAccountActivity extends MyBaseActivity {
 
 
     private DatabaseReference rootReference;
-    private FirebaseAuth Auth;
     private FirebaseUser User;
     private String UserId;
     private Button addButton;
@@ -57,8 +54,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
 
         rootReference = FirebaseDatabase.getInstance().getReference();
-        Auth = FirebaseAuth.getInstance();
-        User = Auth.getCurrentUser();
+        User = mAuth.getCurrentUser();
         if (User != null) {UserId = User.getUid();}
 
         inputEmail = findViewById(R.id.inputEmail);
@@ -109,8 +105,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
             String password_enc = null;
             try {
-                byte[] user_sha = getIntent().getByteArrayExtra("USER_SHA");
-                password_enc = AESCrypt.encrypt(password, user_sha);
+                password_enc = AESCrypt.encrypt(password, MasterKey);
             } catch (Exception e) {
                 e.printStackTrace();
             }

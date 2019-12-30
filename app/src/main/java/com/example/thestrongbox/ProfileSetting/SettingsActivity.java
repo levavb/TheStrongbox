@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thestrongbox.Home.MainActivity;
+import com.example.thestrongbox.Model.MyBaseActivity;
 import com.example.thestrongbox.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends MyBaseActivity {
 
     private EditText display_name, display_email, user_phone;
     private TextView updatedMsg;
