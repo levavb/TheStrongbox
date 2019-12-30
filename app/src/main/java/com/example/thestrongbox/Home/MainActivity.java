@@ -29,6 +29,7 @@ import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.Model.CryptoHash;
+import com.example.thestrongbox.Model.MyBaseActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,13 +50,11 @@ import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MyBaseActivity {
 
     private Toolbar mToolbar;
     private LinearLayout RootLayout;
-    byte[] UserSHA;
     //Firebase
-    private FirebaseAuth mAuth;
     private DatabaseReference userDatabaseReference;
     public FirebaseUser currentUser;
     private DatabaseReference UserDataInDatabaseReference;
@@ -65,14 +64,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
-        UserSHA = new byte[16];
 
-        mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
         try {
             String pass = getIntent().getStringExtra("USER_PASS");
-            UserSHA = CryptoHash.getSha256(pass);
+            MasterKey = CryptoHash.getSha256(pass);
             pass = "";
             getIntent().removeExtra("USER_PASS");
         } catch (NoSuchAlgorithmException e) {
@@ -144,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logOutUser() {
-        UserSHA = CryptoHash.emptySHA();
+        MasterKey = CryptoHash.emptySHA();
         mAuth.signOut();
         Intent loginIntent =  new Intent(MainActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -155,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
     public void MoveToPageAddAccount(View view) {
 
         Intent intent = new Intent(MainActivity.this, AddAccountActivity.class);
-        intent.putExtra("USER_SHA", UserSHA);
         startActivity(intent);
+        finish();
     }
 
     private void displayAllAccounts() {
@@ -177,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                         String Spass = null;
                         try {
-                            Spass = AESCrypt.decrypt(Spass_enc, UserSHA);
+                            Spass = AESCrypt.decrypt(Spass_enc, MasterKey);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -271,7 +268,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, UpdateAccountActivity.class);
                 intent.putExtra("entryId", dataKey);
-                intent.putExtra("USER_SHA", UserSHA);
                 startActivity(intent);
             }
         });
@@ -379,53 +375,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return blessingText;
-    }
-
-    public static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
-
-    private Handler disconnectHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            return true;
-        }
-    });
-
-    private Runnable disconnectCallback = new Runnable() {
-        @Override
-        public void run() {
-            stopDisconnectTimer();
-            SwitchToLogin = true;
-            logOutUser();
-        }
-    };
-
-    private boolean SwitchToLogin = false;
-
-    public void resetDisconnectTimer(){
-        disconnectHandler.removeCallbacks(disconnectCallback);
-        disconnectHandler.postDelayed(disconnectCallback, DISCONNECT_TIMEOUT);
-    }
-
-    public void stopDisconnectTimer(){
-        disconnectHandler.removeCallbacks(null);
-    }
-
-    @Override
-    public void onUserInteraction(){
-        resetDisconnectTimer();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        resetDisconnectTimer();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (!SwitchToLogin) {
-            resetDisconnectTimer();
-        }
     }
 }
