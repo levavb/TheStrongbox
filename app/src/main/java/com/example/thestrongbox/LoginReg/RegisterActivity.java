@@ -118,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
-                                String deviceToken = FirebaseInstanceId.getInstance().getToken();
+
                                 // get and link storage
                                 String current_userID =  mAuth.getCurrentUser().getUid();
                                 storeDefaultDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(current_userID);
@@ -126,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 storeDefaultDatabaseReference.child("verified").setValue("false");
                                 storeDefaultDatabaseReference.child("user_mobile").setValue(mobile);
                                 storeDefaultDatabaseReference.child("user_email").setValue(email);
-                                storeDefaultDatabaseReference.child("device_token").setValue(deviceToken);
+
                                 storeDefaultDatabaseReference.child("data").setValue("")
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

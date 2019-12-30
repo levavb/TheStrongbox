@@ -102,17 +102,18 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = userEmail.getText().toString();
-                String password = userPassword.getText().toString();
-
-                loginUserAccount(email, password);
+                loginUserAccount();
 
             }
         });
     }
 
-    private void loginUserAccount(String email, final String password) {
+    private void loginUserAccount() {
         //just validation
+        String email    = userEmail.getText().toString();
+        String password = userPassword.getText().toString();
+
+
         if(TextUtils.isEmpty(email)){
             Toast.makeText(this, "Email is required",Toast.LENGTH_SHORT).show();
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
@@ -129,31 +130,23 @@ public class LoginActivity extends AppCompatActivity {
 
             // after validation checking, log in user a/c
             mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if (task.isSuccessful()){
-                                // these lines for taking DEVICE TOKEN for sending device to device notification
-                                String userUID = mAuth.getCurrentUser().getUid();
-                                String userDeviceToken = FirebaseInstanceId.getInstance().getToken();
-                                userDatabaseReference.child(userUID).child("device_token").setValue(userDeviceToken)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                    checkVerifiedEmail();
-                                            }
-                                        });
+                            if (task.isSuccessful()) {
+                                checkVerifiedEmail();
 
                             } else {
                                 Toast.makeText(LoginActivity.this, "Your email and password may be incorrect. Please check & try again.",Toast.LENGTH_SHORT).show();
                             }
-
 //                            progressDialog.dismiss();
-
                         }
                     });
+
         }
+        password = "";
     }
 
     /** checking email verified or NOT */
@@ -166,13 +159,13 @@ public class LoginActivity extends AppCompatActivity {
         if (isVerified){
             String UID = mAuth.getCurrentUser().getUid();
             userDatabaseReference.child(UID).child("verified").setValue("true");
-            String password = userPassword.getText().toString();
+
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("USER_PASS", password);
+            intent.putExtra("USER_PASS", userPassword.getText().toString());
+            userPassword.setText("");
             startActivity(intent);
             finish();
-
         } else {
             Toast.makeText(LoginActivity.this, "Email is not verified. Please verify first",Toast.LENGTH_SHORT).show();
             mAuth.signOut();
