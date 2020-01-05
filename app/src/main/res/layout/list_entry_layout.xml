@@ -62,12 +62,14 @@
     android:layout_marginTop="10dp"
     android:orientation="vertical" >
     <ImageButton
+        android:id="@+id/RemoveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/remove_icon"
         android:layout_marginLeft="40dp"
         android:background="@color/white" />
     <ImageButton
+        android:id="@+id/EditBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/edit_icon"

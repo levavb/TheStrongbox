@@ -126,7 +126,6 @@ public class AddAccountActivity extends MyBaseActivity {
                 }
             });
             Intent mainIntent = new Intent(AddAccountActivity.this, MainActivity.class);
-            mainIntent.putExtra("USER_PASS","12345678");
             startActivity(mainIntent);
         }
     }

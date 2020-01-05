@@ -1,19 +1,20 @@
 package com.example.thestrongbox.Model;
 
 public class Account {
-    private String userName, note, url, password, date;
+    private String userName, note, url, password, date, dataKey;
 
     // default constructor
     public Account() {
     }
 
     // constructor
-    public Account(String userName, String note, String password, String Url, String date) {
+    public Account(String dataKey, String userName, String note, String password, String Url, String date) {
         this.userName = userName;
         this.note = note;
         this.password = password;
         this.url = Url;
         this.date = date;
+        this.dataKey = dataKey;
     }
 
     public String getUserName() {
@@ -22,6 +23,14 @@ public class Account {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 
     public String getDate() {
