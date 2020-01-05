@@ -4,40 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home.MainActivity"
-    android:background="@color/gray">
+    android:background="@color/gray"
+    tools:context=".Home.MainActivity">
 
 
     <include
         android:id="@+id/main_page_toolbar"
         layout="@layout/app_bar_layout" />
 
+    <LinearLayout
+        android:id="@+id/ll_wellcome"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/layout_bg"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/main_page_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/main_layout"
+        android:orientation="vertical">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/ScrollView01"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="50dp"
-        tools:ignore="MissingConstraints">
+        <TextView
+            android:id="@+id/WellcomeBubble"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Wellcome"
+            android:textColor="#B22222"
+            android:textSize="32dp" />
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/RelativeLayout01"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+        <TextView
+            android:id="@+id/DayPart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Day"
+            android:textColor="#000000"
+            android:textSize="18dp" />
+    </LinearLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/main_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:background="@color/gray"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="105dp" >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@+id/ll_wellcome"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
-            </LinearLayout>
-        </RelativeLayout>
-    </ScrollView>
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/add_account"
@@ -49,9 +71,9 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/button_bg_round"
         android:elevation="10dp"
+        android:onClick="MoveToPageAddAccount"
         android:padding="15dp"
         android:src="@drawable/add"
-        android:onClick="MoveToPageAddAccount"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.083"

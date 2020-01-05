@@ -19,15 +19,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
 import com.example.thestrongbox.Model.AESCrypt;
+import com.example.thestrongbox.Model.Account;
+import com.example.thestrongbox.Model.AccountAdapter;
 import com.example.thestrongbox.Model.CryptoHash;
 import com.example.thestrongbox.Model.MyBaseActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
@@ -46,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
@@ -58,12 +65,19 @@ public class MainActivity extends MyBaseActivity {
     private DatabaseReference userDatabaseReference;
     public FirebaseUser currentUser;
     private DatabaseReference UserDataInDatabaseReference;
+
+
+    ListView lv;
+    ArrayList<Account> AccountList;
+    AccountAdapter AccountAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
+        lv = findViewById(R.id.listView);
 
         currentUser = mAuth.getCurrentUser();
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
@@ -152,20 +166,21 @@ public class MainActivity extends MyBaseActivity {
     public void MoveToPageAddAccount(View view) {
 
         Intent intent = new Intent(MainActivity.this, AddAccountActivity.class);
+//        startActivityForResult(intent,1);
         startActivity(intent);
         finish();
     }
 
     private void displayAllAccounts() {
-
+        AccountList = new ArrayList<Account>();
         userDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    RootLayout.removeAllViews();
                     addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
+                    AccountList.clear();
                     for (DataSnapshot postSnapshot: dataSnapshot.child("data").getChildren()) {
 
-                        String Semail = postSnapshot.child("email").getValue().toString();
+                        String SuserName = postSnapshot.child("email").getValue().toString();
                         String Spass_enc = postSnapshot.child("password").getValue().toString();
                         String Snote = postSnapshot.child("note").getValue().toString();
                         String Surl = postSnapshot.child("url").getValue().toString();
@@ -178,8 +193,10 @@ public class MainActivity extends MyBaseActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        AddAccountToList(postSnapshot.getKey(), Semail, Spass, Snote, Surl, Sdate);
+                        AccountList.add(new Account( SuserName, Snote, Spass, Surl, Sdate));
                     }
+                    AccountAdapter = new AccountAdapter(MainActivity.this,0,0,AccountList);
+                    lv.setAdapter(AccountAdapter);
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -195,6 +212,7 @@ public class MainActivity extends MyBaseActivity {
         LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 300);
         wLayoutParams.setMargins(0,15,0,0);
         new_window.setLayoutParams(wLayoutParams);
+
         new_window.setBackgroundColor(R.color.white);
         new_window.setBackgroundResource(R.drawable.layout_bg);
         new_window.setOrientation(0);
@@ -271,93 +289,18 @@ public class MainActivity extends MyBaseActivity {
                 startActivity(intent);
             }
         });
-
-        date_tv.setText(Sdate);
-        date_tv.setTextSize(12);
-        date_tv.setPadding(0,10,0,0);
-
-        right_side.addView(removeBtn);
-        right_side.addView(editBtn);
-        right_side.addView(date_tv);
-
-        RootLayout.addView(new_window);
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
     private void addWellcomeBubble(String UserName) {
 
-        LinearLayout new_window = new LinearLayout(this);
-        LinearLayout.LayoutParams wLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 350);
-        wLayoutParams.setMargins(0,10,0,0);
-        new_window.setLayoutParams(wLayoutParams);
-        new_window.setBackgroundColor(R.color.white);
-        new_window.setBackgroundResource(R.drawable.layout_bg);
-        new_window.setOrientation(1);
-
-        TextView welcome_tv = new TextView(this);
-        TextView part_day_tv = new TextView(this);
+        TextView welcome_tv = findViewById(R.id.WellcomeBubble);
+        TextView part_day_tv = findViewById(R.id.DayPart);
 
         welcome_tv.setText("Wellcome " + UserName);
-        welcome_tv.setGravity(Gravity.CENTER);
-        welcome_tv.setTextColor(Color.rgb(178,34,34));
-        welcome_tv.setTextSize(32);
 
         part_day_tv.setText(getBlessingDayText());
-        part_day_tv.setGravity(Gravity.CENTER);
-        part_day_tv.setTextColor(Color.rgb(178,34,34));
-        part_day_tv.setTextSize(18);
 
-        LinearLayout joke_ll = new LinearLayout(this);
-        LinearLayout.LayoutParams jLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        joke_ll.setLayoutParams(jLayoutParams);
-        joke_ll.setOrientation(0);
-        joke_ll.setGravity(Gravity.CENTER);
-
-        TextView get_joke_tv = new TextView(this);
-        get_joke_tv.setText("To improve your day: ");
-        get_joke_tv.setTextColor(Color.BLACK);
-        get_joke_tv.setTextSize(20);
-
-        ImageButton joke_btn = new ImageButton(this);
-        joke_btn.setImageResource(R.drawable.tap);
-        LinearLayout.LayoutParams lpJ = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        joke_btn.setLayoutParams(lpJ);
-        joke_btn.setBackgroundColor(Color.WHITE);
-        joke_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getAndDisplayJoke();
-            }
-        });
-
-        joke_ll.addView(get_joke_tv);
-        joke_ll.addView(joke_btn);
-
-        new_window.addView(welcome_tv);
-        new_window.addView(part_day_tv);
-        new_window.addView(joke_ll);
-
-        RootLayout.addView(new_window);
-    }
-
-    private void getAndDisplayJoke() {
-        AsyncHttpClient client = new AsyncHttpClient();
-
-        client.get("http://api.icndb.com/jokes/random",new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int status, Header[] header, JSONObject response) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.joke_popup, null);
-                TextView tv = view.getRootView().findViewById(R.id.jokeMessage);
-                try {
-                    tv.setText(response.getJSONObject("value").getString("joke"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                builder.setView(view);
-                builder.show();
-            }
-        });
     }
 
     private String getBlessingDayText() {
@@ -376,4 +319,61 @@ public class MainActivity extends MyBaseActivity {
 
         return blessingText;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 0) //come from edit mode
+//        {
+//            if (resultCode == RESULT_OK) {
+//                String model = data.getExtras().getString("model");
+//                String passengers = data.getExtras().getString("passengers");
+//                String color = data.getExtras().getString("color");
+//                Bitmap bitmap = Helper.byteArrayToBitmap(data.getExtras().getByteArray("bitmap"));
+//                String speed = data.getExtras().getString("speed");
+//
+//                lastSelected.setModel(model);
+//                lastSelected.setPassengers(Integer.valueOf(passengers));
+//                lastSelected.setColor(color);
+//                lastSelected.setBitmap(bitmap);
+//                lastSelected.setSpeed(Integer.valueOf(speed));
+//                carAdapter.notifyDataSetChanged();
+//                Toast.makeText(this, "data saved", Toast.LENGTH_LONG).show();
+//            } else {
+//                if (resultCode == RESULT_CANCELED)
+//                    Toast.makeText(this, "user cancel", Toast.LENGTH_LONG).show();
+//
+//            }
+//        }
+        Toast.makeText(this,"result activity",Toast.LENGTH_LONG).show();
+
+//            if(resultCode==RESULT_OK)
+//            {
+//                String SuserName = data.getExtras().getString("email");
+//                String Spass_enc = data.getExtras().getString("password");
+//                String Snote = data.getExtras().getString("note");
+//                String Surl = data.getExtras().getString("url");
+//                String Sdate = data.getExtras().getString("date");
+//
+//
+//                String Spass = null;
+//                try {
+//                    Spass = AESCrypt.decrypt(Spass_enc, MasterKey);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                AccountAdapter.add(new Account( SuserName, Snote, Spass, Surl, Sdate));
+//
+//                AccountAdapter.notifyDataSetChanged();
+//                Toast.makeText(this,"data saved",Toast.LENGTH_LONG).show();
+//            }
+//            else if(resultCode==RESULT_CANCELED)
+//            {
+//                Toast.makeText(this,"user cancel",Toast.LENGTH_LONG).show();
+//            }
+
+    }
+
+
 }
+
