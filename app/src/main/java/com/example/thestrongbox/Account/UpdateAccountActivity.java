@@ -74,7 +74,7 @@ public class UpdateAccountActivity extends MyBaseActivity {
         inputUrl.setAdapter(adapter);
         inputUrl.setThreshold(1);
 
-        UpdateDatabaseReference.addValueEventListener(new ValueEventListener() {
+        UpdateDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // retrieve data from db
@@ -110,7 +110,6 @@ public class UpdateAccountActivity extends MyBaseActivity {
                 String url = inputUrl.getText().toString();
 
                 saveInformation(email, note, password, url);
-
             }
         });
 
@@ -126,7 +125,6 @@ public class UpdateAccountActivity extends MyBaseActivity {
         } else if (TextUtils.isEmpty(password)){
             Toast.makeText(UpdateAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
         } else if (password.length() > 30){
-            Log.d("LEVAV","NUM PASS: " + password.length());
             Toast.makeText(UpdateAccountActivity.this, "Your Password should be 1 to 30 numbers of characters.",Toast.LENGTH_SHORT).show();
         } else if (url.length() > 35){
             Toast.makeText(UpdateAccountActivity.this, "Your Url should be 1 to 35 numbers of characters.",Toast.LENGTH_SHORT).show();

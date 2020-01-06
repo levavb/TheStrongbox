@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MyBaseActivity extends AppCompatActivity {
 
-    public byte[] MasterKey;
+    public static byte[] MasterKey = new byte[16];
     public FirebaseAuth mAuth;
     public static final long SWITCH_ACTIVITY = 2;
     public static final long DISCONNECT_TIMEOUT = 300000; // 5 min = 5 * 60 * 1000 ms
@@ -41,7 +41,6 @@ public class MyBaseActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MasterKey = new byte[16];
         mAuth = FirebaseAuth.getInstance();
     }
 

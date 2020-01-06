@@ -3,34 +3,28 @@ package com.example.thestrongbox.Home;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.TextUtils;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
-import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;
-import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.Model.Account;
 import com.example.thestrongbox.Model.AccountAdapter;
 import com.example.thestrongbox.Model.CryptoHash;
@@ -38,6 +32,7 @@ import com.example.thestrongbox.Model.MyBaseActivity;
 import com.example.thestrongbox.ProfileSetting.SettingsActivity;
 import com.example.thestrongbox.R;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,37 +66,10 @@ public class MainActivity extends MyBaseActivity {
         Rv = findViewById(R.id.recycler_view);
         Rv.setLayoutManager(new LinearLayoutManager(this));
         Rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        Rv.addOnItemTouchListener(
-                new RecyclerItemClickListener(MainActivity.this, Rv ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, int position) {
-                        Account account = AccountAdapter.getItem(position);
-                        String Spass_enc = getPassForSpecificAcoount(account.getDataKey());
-
-                        String Spass = "";
-                        try {
-                            Log.d("LEVAV", "pass = " + Spass_enc);
-                            Log.d("LEVAV", "MasterKey = " + MasterKey);
-                            Spass = AESCrypt.decrypt("3DRj41toH7ZTyKaKNBxB8A==\n", CryptoHash.getSha256("12345678"));
-                        } catch (Exception e) {
-                            Log.d("LEVAV", "printStackTrace");
-                            e.printStackTrace();
-                        }
-
-                        TextView tvPass = view.findViewById(R.id.tvPass);
-                        tvPass.setText(Html.fromHtml("<strong><em>" + "Password: " + "</em></strong>" + Spass));
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-                        // do whatever
-                    }
-                })
-        );
 
         currentUser = mAuth.getCurrentUser();
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
-        Log.d("LEVAV","main activity on create");
         if (getIntent().getExtras() != null) {
-            Log.d("LEVAV","intent is not null");
             try {
                 String pass = getIntent().getStringExtra("USER_PASS");
                 MasterKey = CryptoHash.getSha256(pass);
@@ -122,26 +90,7 @@ public class MainActivity extends MyBaseActivity {
         }
 
     }
-    private String getPassForSpecificAcoount(final String dataKey) {
-        userDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.child("data").getChildren()) {
 
-                    if (postSnapshot.getKey() == dataKey) {
-
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("OnCancelled", "on");
-            }
-        });
-        return "123454545";
-    }
     public void deleteEntry(String entryId) {
        UserDataInDatabaseReference.child(entryId).getRef().removeValue();
     }
@@ -206,37 +155,91 @@ public class MainActivity extends MyBaseActivity {
 
     public void MoveToPageAddAccount(View view) {
 
-        Intent intent = new Intent(MainActivity.this, AddAccountActivity.class);
-        startActivity(intent);
+        Intent AddAccountIntent = new Intent(MainActivity.this, AddAccountActivity.class);
+        AddAccountIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(AddAccountIntent);
     }
 
     private void displayAllAccounts() {
         AccountList = new ArrayList<Account>();
-        userDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
-                    AccountList.clear();
-                    for (DataSnapshot postSnapshot: dataSnapshot.child("data").getChildren()) {
+        userDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
+                AccountList.clear();
+                for (DataSnapshot postSnapshot: dataSnapshot.child("data").getChildren()) {
 
-                        String SuserName = postSnapshot.child("email").getValue().toString();
-                        String Spass_enc = postSnapshot.child("password").getValue().toString();
-                        String Snote = postSnapshot.child("note").getValue().toString();
-                        String Surl = postSnapshot.child("url").getValue().toString();
-                        String Sdate = postSnapshot.child("date").getValue().toString();
+                    String SuserName = postSnapshot.child("email").getValue().toString();
+                    String Snote = postSnapshot.child("note").getValue().toString();
+                    String Surl = postSnapshot.child("url").getValue().toString();
+                    String Sdate = postSnapshot.child("date").getValue().toString();
 
-                        String Spass = "";
-                        AccountList.add(new Account(postSnapshot.getKey(), SuserName, Snote, Spass, Surl, Sdate));
-                    }
-                    AccountAdapter = new AccountAdapter(MainActivity.this, AccountList, UserDataInDatabaseReference);
-                    Rv.setAdapter(AccountAdapter);
+                    AccountList.add(new Account(postSnapshot.getKey(), SuserName, Snote, Surl, Sdate));
                 }
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d("OnCancelled", "on");
-                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("OnCancelled", "on");
+            }
         });
 
+        AccountAdapter = new AccountAdapter(this, AccountList, UserDataInDatabaseReference);
+        Rv.setAdapter(AccountAdapter);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(Rv);
+        setDatabaseListener();
+    }
+
+    private void setDatabaseListener() {
+        UserDataInDatabaseReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                String SuserName = dataSnapshot.child("email").getValue().toString();
+                String Snote = dataSnapshot.child("note").getValue().toString();
+                String Surl = dataSnapshot.child("url").getValue().toString();
+                String Sdate = dataSnapshot.child("date").getValue().toString();
+
+                AccountList.add(new Account(dataSnapshot.getKey(), SuserName, Snote, Surl, Sdate));
+                AccountAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                Account account = AccountList.get(getItemIndexByDataKey(dataSnapshot.getKey()));
+                account.setUserName(dataSnapshot.child("email").getValue().toString());
+                account.setNote(dataSnapshot.child("note").getValue().toString());
+                account.setUrl(dataSnapshot.child("url").getValue().toString());
+                account.setDate(dataSnapshot.child("date").getValue().toString());
+
+                AccountAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                AccountList.remove(getItemIndexByDataKey(dataSnapshot.getKey()));
+                AccountAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private int getItemIndexByDataKey(String dataKey) {
+        for (int i=0; i < AccountList.size() ; i++) {
+
+            if (AccountList.get(i).getDataKey().equals(dataKey)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
@@ -266,5 +269,38 @@ public class MainActivity extends MyBaseActivity {
 
         return blessingText;
     }
+
+    ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.delete_item_dailog, null);
+
+            builder.setCancelable(true);
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    AccountAdapter.notifyDataSetChanged();
+                }
+            });
+
+            final int itemId = viewHolder.getAdapterPosition();
+            builder.setPositiveButton("YES, Log out", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    deleteEntry(AccountList.get(itemId).getDataKey());
+                }
+            });
+            builder.setView(view);
+            builder.show();
+        }
+    };
 }
 

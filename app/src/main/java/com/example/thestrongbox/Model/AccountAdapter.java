@@ -1,6 +1,5 @@
 package com.example.thestrongbox.Model;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,22 +9,14 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.example.thestrongbox.Account.UpdateAccountActivity;
-import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.R;
 import com.google.firebase.database.DatabaseReference;
-
-
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -53,10 +44,10 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         final Account itemData = objects.get(position);
 
 
-        holder.tvEmail.setText(Html.fromHtml("<strong><em>" + "Email/User Name: " + "</em></strong>" + itemData.getUserName()));
-        holder.tvPass.setText(Html.fromHtml("<strong><em>" + "Password: " + "</em></strong>" + "******"));
-        holder.tvNote.setText(Html.fromHtml("<strong><em>" + "Note: " + "</em></strong>" + itemData.getNote()));
-        holder.tvUrl.setText(Html.fromHtml("<strong><em>" + "Url: " + "</em></strong>" + "<a href=" + "" + ">" + itemData.getUrl() + "</a>"));
+        holder.tvEmail.setText(itemData.getUserName());
+        holder.tvPass.setText("DummyPass");
+        holder.tvNote.setText(itemData.getNote());
+        holder.tvUrl.setText(Html.fromHtml("<a href=" + "" + ">" + itemData.getUrl() + "</a>"));
         holder.tvDate.setText(itemData.getDate());
         final String Surl = itemData.getUrl();
         holder.tvUrl.setOnClickListener(new View.OnClickListener() {
@@ -70,18 +61,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
         });
         final String dataKey = itemData.getDataKey();
-        holder.editBtn.setOnClickListener(new View.OnClickListener() {
+        holder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(context, UpdateAccountActivity.class);
                 intent.putExtra("entryId", dataKey);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(intent);
-            }
-        });
-        holder.removeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserDataInDatabaseReference.child(dataKey).getRef().removeValue();
             }
         });
     }
@@ -97,8 +83,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout itemLayout;
-        ImageButton editBtn;
-        ImageButton removeBtn;
 
         TextView tvEmail;
         TextView tvPass;
@@ -117,8 +101,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             tvUrl = (TextView) itemView.findViewById(R.id.tvUrl);
             tvDate = (TextView) itemView.findViewById(R.id.tvDate);
 
-            editBtn = itemView.findViewById(R.id.EditBtn);
-            removeBtn = itemView.findViewById(R.id.RemoveBtn);
             itemLayout = itemView.findViewById(R.id.customLayout);
         }
     }

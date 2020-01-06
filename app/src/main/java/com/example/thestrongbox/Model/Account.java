@@ -1,17 +1,16 @@
 package com.example.thestrongbox.Model;
 
 public class Account {
-    private String userName, note, url, password, date, dataKey;
+    private String userName, note, url, date, dataKey;
 
     // default constructor
     public Account() {
     }
 
     // constructor
-    public Account(String dataKey, String userName, String note, String password, String Url, String date) {
+    public Account(String dataKey, String userName, String note, String Url, String date) {
         this.userName = userName;
         this.note = note;
-        this.password = password;
         this.url = Url;
         this.date = date;
         this.dataKey = dataKey;
@@ -55,14 +54,6 @@ public class Account {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
 }
