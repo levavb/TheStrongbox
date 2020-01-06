@@ -152,9 +152,10 @@ public class MainActivity extends MyBaseActivity {
 
     public void MoveToPageAddAccount(View view) {
 
-        Intent intent = new Intent(MainActivity.this, AddAccountActivity.class);
-        startActivity(intent);
-        finish();
+        Intent AddAccountIntent = new Intent(MainActivity.this, AddAccountActivity.class);
+        AddAccountIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(AddAccountIntent);
+//        finish();
     }
 
     private void displayAllAccounts() {

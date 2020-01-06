@@ -126,6 +126,7 @@ public class AddAccountActivity extends MyBaseActivity {
                 }
             });
             Intent mainIntent = new Intent(AddAccountActivity.this, MainActivity.class);
+            mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mainIntent);
         }
     }
