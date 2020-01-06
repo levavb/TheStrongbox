@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,7 +58,7 @@ public class MainActivity extends MyBaseActivity {
     private DatabaseReference UserDataInDatabaseReference;
 
 
-    ListView lv;
+    RecyclerView Rv;
     ArrayList<Account> AccountList;
     AccountAdapter AccountAdapter;
 
@@ -65,35 +68,34 @@ public class MainActivity extends MyBaseActivity {
         setContentView(R.layout.activity_main);
         mToolbar = findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
-        lv = findViewById(R.id.listView);
-        lv.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> listView, View itemView, int itemPosition, long itemId)
-            {
-                Log.d("LEVAV", "pass = ");
-            }
-        });
-//        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//        {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Account account = AccountAdapter.getItem(position);
-//                String Spass_enc = UserDataInDatabaseReference.child(account.getDataKey()).child("password").toString();
-//                String Spass = "";
-//                try {
-//                    Log.d("LEVAV", "pass = " + Spass_enc);
-//                    Log.d("LEVAV", "MasterKey = " + MasterKey);
-//                    Log.d("LEVAV", "Spass = " + AESCrypt.decrypt(Spass_enc, MasterKey));
-//                    Spass = AESCrypt.decrypt(Spass_enc, MasterKey);
-//                } catch (Exception e) {
-//                    Log.d("LEVAV", "printStackTrace");
-//                    e.printStackTrace();
-//                }
-//
-//                TextView tvPass = view.findViewById(R.id.tvPass);
-//                tvPass.setText(Spass);
-//            };
-//        });
+        Rv = findViewById(R.id.recycler_view);
+        Rv.setLayoutManager(new LinearLayoutManager(this));
+        Rv.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        Rv.addOnItemTouchListener(
+                new RecyclerItemClickListener(MainActivity.this, Rv ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        Account account = AccountAdapter.getItem(position);
+                        String Spass_enc = getPassForSpecificAcoount(account.getDataKey());
+
+                        String Spass = "";
+                        try {
+                            Log.d("LEVAV", "pass = " + Spass_enc);
+                            Log.d("LEVAV", "MasterKey = " + MasterKey);
+                            Spass = AESCrypt.decrypt("3DRj41toH7ZTyKaKNBxB8A==\n", CryptoHash.getSha256("12345678"));
+                        } catch (Exception e) {
+                            Log.d("LEVAV", "printStackTrace");
+                            e.printStackTrace();
+                        }
+
+                        TextView tvPass = view.findViewById(R.id.tvPass);
+                        tvPass.setText(Html.fromHtml("<strong><em>" + "Password: " + "</em></strong>" + Spass));
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                })
+        );
 
         currentUser = mAuth.getCurrentUser();
         RootLayout = (LinearLayout) findViewById(R.id.main_layout);
@@ -120,7 +122,26 @@ public class MainActivity extends MyBaseActivity {
         }
 
     }
+    private String getPassForSpecificAcoount(final String dataKey) {
+        userDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.child("data").getChildren()) {
 
+                    if (postSnapshot.getKey() == dataKey) {
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("OnCancelled", "on");
+            }
+        });
+        return "123454545";
+    }
     public void deleteEntry(String entryId) {
        UserDataInDatabaseReference.child(entryId).getRef().removeValue();
     }
@@ -207,8 +228,8 @@ public class MainActivity extends MyBaseActivity {
                         String Spass = "";
                         AccountList.add(new Account(postSnapshot.getKey(), SuserName, Snote, Spass, Surl, Sdate));
                     }
-                    AccountAdapter = new AccountAdapter(MainActivity.this,0,0, AccountList, UserDataInDatabaseReference);
-                    lv.setAdapter(AccountAdapter);
+                    AccountAdapter = new AccountAdapter(MainActivity.this, AccountList, UserDataInDatabaseReference);
+                    Rv.setAdapter(AccountAdapter);
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {

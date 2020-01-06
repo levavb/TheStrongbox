@@ -18,7 +18,7 @@ public class CryptoHash {
         byte[] digest = new byte[16];
         System.arraycopy(digestTmp,0,digest,0,16);
 
-        return digest;
+        return md.digest();
     }
 
     public static byte[] emptySHA() {
