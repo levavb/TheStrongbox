@@ -17,7 +17,7 @@ import com.example.thestrongbox.Account.UpdateAccountActivity;
 import com.example.thestrongbox.R;
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
@@ -80,6 +80,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public Account getItem(int position) {
         return objects.get(position);
     }
+
+    public void updateList(List<Account> newList) {
+        objects = new ArrayList<>();
+        objects.addAll(newList);
+        notifyDataSetChanged();
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout itemLayout;

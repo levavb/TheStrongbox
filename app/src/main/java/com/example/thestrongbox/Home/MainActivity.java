@@ -19,7 +19,10 @@ import android.view.View;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
+
+
 
 
 import com.example.thestrongbox.About.AboutAppActivity;
@@ -42,8 +45,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
-public class MainActivity extends MyBaseActivity {
+public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTextListener {
 
     private Toolbar mToolbar;
     private LinearLayout RootLayout;
@@ -99,6 +103,10 @@ public class MainActivity extends MyBaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 
@@ -304,5 +312,27 @@ public class MainActivity extends MyBaseActivity {
             builder.show();
         }
     };
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        String userInput = newText.toLowerCase();
+        List<Account> newList = new ArrayList<>();
+
+        for (Account entry : AccountList) {
+
+            if (entry.getUrl().toLowerCase().contains(userInput)) {
+                newList.add(entry);
+            }
+
+        }
+        AccountAdapter.updateList(newList);
+        return true;
+    }
 }
 
