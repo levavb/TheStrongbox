@@ -95,6 +95,18 @@
                     android:layout_gravity="right"
                     android:layout_marginBottom="10dp" />
 
+                <Button
+                    android:id="@+id/ChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/red"
+                    android:padding="10dp"
+                    android:text="Change Password"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

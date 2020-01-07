@@ -39,6 +39,7 @@
         <activity
             android:name=".ProfileSetting.SettingsActivity"
             android:configChanges="orientation|screenSize"
+            android:launchMode="singleInstance"
             android:parentActivityName=".Home.MainActivity"/>
         <activity
         android:name=".Account.AddAccountActivity"
@@ -48,6 +49,10 @@
             android:name=".Account.UpdateAccountActivity"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".Home.MainActivity"/>
+        <activity
+            android:name=".ForgotPassword.ChangePasswordActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".ProfileSetting.SettingsActivity"/>
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.thestrongbox.ForgotPassword.ChangePasswordActivity;
 import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.MyBaseActivity;
 import com.example.thestrongbox.R;
@@ -35,6 +36,7 @@ public class SettingsActivity extends MyBaseActivity {
     private EditText display_name, display_email, user_phone;
     private TextView updatedMsg;
     private Button saveInfoBtn;
+    private Button changePassBtn;
 
     private DatabaseReference getUserDatabaseReference;
     private FirebaseAuth mAuth;
@@ -54,6 +56,7 @@ public class SettingsActivity extends MyBaseActivity {
         display_email = findViewById(R.id.userEmail);
         user_phone = findViewById(R.id.phone);
         saveInfoBtn = findViewById(R.id.saveInfoBtn);
+        changePassBtn = findViewById(R.id.ChangePassword);
 
         Toolbar toolbar = findViewById(R.id.profile_settings_appbar);
         setSupportActionBar(toolbar);
@@ -94,6 +97,16 @@ public class SettingsActivity extends MyBaseActivity {
                 saveInformation(uName, uPhone);
             }
         });
+
+        changePassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingsActivity.this, ChangePasswordActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+
 
         // hide soft keyboard
         getWindow().setSoftInputMode(

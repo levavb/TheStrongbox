@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
 
         registerUserFullName = (EditText)findViewById(R.id.registerFullName);
-        registerUserEmail = (EditText)findViewById(R.id.registerEmail);
+        registerUserEmail   = (EditText)findViewById(R.id.registerEmail);
         registerUserMobileNo = (EditText)findViewById(R.id.registerMobileNo);
         registerUserPassword = (EditText)findViewById(R.id.registerPassword);
         confirmRegisterUserPassword = (EditText)findViewById(R.id.confirm_registerPassword);

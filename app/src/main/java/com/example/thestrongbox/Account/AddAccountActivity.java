@@ -101,7 +101,7 @@ public class AddAccountActivity extends MyBaseActivity {
             String data_push_id = user_data_key.getKey();
 
             HashMap<String, Object> strongBoxEntry_text_body = new HashMap<>();
-            strongBoxEntry_text_body.put("email", email);
+
 
             String password_enc = null;
             try {
@@ -109,6 +109,7 @@ public class AddAccountActivity extends MyBaseActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            strongBoxEntry_text_body.put("email", email);
             strongBoxEntry_text_body.put("password", password_enc);
             strongBoxEntry_text_body.put("note", note);
             strongBoxEntry_text_body.put("url", url);
