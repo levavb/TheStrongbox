@@ -41,7 +41,6 @@ public class MyBaseActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        MasterKey = new byte[16];
         mAuth = FirebaseAuth.getInstance();
     }
 

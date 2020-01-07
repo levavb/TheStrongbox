@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             //progress bar
             progressDialog.setMessage("Please wait...");
-            progressDialog.show();
+//            progressDialog.show();
             progressDialog.setCanceledOnTouchOutside(false);
 
             // after validation checking, log in user a/c
