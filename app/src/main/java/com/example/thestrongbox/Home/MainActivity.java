@@ -105,11 +105,13 @@ public class MainActivity extends MyBaseActivity {
 
         if (item.getItemId() == R.id.profile_settings){
             Intent intent =  new Intent(MainActivity.this, SettingsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
 
         if (item.getItemId() == R.id.about_app){
             Intent intent =  new Intent(MainActivity.this, AboutAppActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
 

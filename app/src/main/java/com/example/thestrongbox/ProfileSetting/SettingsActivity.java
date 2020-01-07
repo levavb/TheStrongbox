@@ -122,6 +122,7 @@ public class SettingsActivity extends MyBaseActivity {
                                         public void run() {
                                             updatedMsg.setVisibility(View.GONE);
                                             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                             startActivity(intent);
                                         }
                                     });
