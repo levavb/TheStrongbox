@@ -90,7 +90,22 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
             userDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID);
             UserDataInDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_uID).child("data");
 
-            displayAllAccounts();
+            AccountList = new ArrayList<Account>();
+            userDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("OnCancelled", "on");
+                }
+            });
+
+            AccountAdapter = new AccountAdapter(this, AccountList, UserDataInDatabaseReference);
+            Rv.setAdapter(AccountAdapter);
+            new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(Rv);
+            setDatabaseListener();
         }
 
     }
@@ -170,35 +185,6 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
         startActivity(AddAccountIntent);
     }
 
-    private void displayAllAccounts() {
-        AccountList = new ArrayList<Account>();
-        userDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
-                AccountList.clear();
-                for (DataSnapshot postSnapshot: dataSnapshot.child("data").getChildren()) {
-
-                    String SuserName = postSnapshot.child("email").getValue().toString();
-                    String Snote = postSnapshot.child("note").getValue().toString();
-                    String Surl = postSnapshot.child("url").getValue().toString();
-                    String Sdate = postSnapshot.child("date").getValue().toString();
-
-                    AccountList.add(new Account(postSnapshot.getKey(), SuserName, Snote, Surl, Sdate));
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d("OnCancelled", "on");
-            }
-        });
-
-        AccountAdapter = new AccountAdapter(this, AccountList, UserDataInDatabaseReference);
-        Rv.setAdapter(AccountAdapter);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(Rv);
-        setDatabaseListener();
-    }
-
     private void setDatabaseListener() {
         UserDataInDatabaseReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -207,7 +193,7 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
                 String Snote = dataSnapshot.child("note").getValue().toString();
                 String Surl = dataSnapshot.child("url").getValue().toString();
                 String Sdate = dataSnapshot.child("date").getValue().toString();
-
+                Log.d("LEVAV", "ON CHILD ADD = " + AccountList.size());
                 AccountList.add(new Account(dataSnapshot.getKey(), SuserName, Snote, Surl, Sdate));
                 AccountAdapter.notifyDataSetChanged();
             }
@@ -220,7 +206,7 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
                 account.setNote(dataSnapshot.child("note").getValue().toString());
                 account.setUrl(dataSnapshot.child("url").getValue().toString());
                 account.setDate(dataSnapshot.child("date").getValue().toString());
-
+                Log.d("LEVAV", "ON CHILD change");
                 AccountAdapter.notifyDataSetChanged();
             }
 

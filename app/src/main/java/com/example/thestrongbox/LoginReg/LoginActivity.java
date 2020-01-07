@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             //progress bar
             progressDialog.setMessage("Please wait...");
-//            progressDialog.show();
+            progressDialog.show();
             progressDialog.setCanceledOnTouchOutside(false);
 
             // after validation checking, log in user a/c
@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(LoginActivity.this, "Your email and password may be incorrect. Please check & try again.",Toast.LENGTH_SHORT).show();
                             }
-//                            progressDialog.dismiss();
+                            progressDialog.dismiss();
                         }
                     });
 
