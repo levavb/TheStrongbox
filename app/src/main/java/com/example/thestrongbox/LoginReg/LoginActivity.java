@@ -15,20 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.thestrongbox.ForgotPassword.ForgotPassActivity;
-import com.example.thestrongbox.Home.MainActivity;
-import com.example.thestrongbox.Model.CryptoHash;
+
 import com.example.thestrongbox.R;
+import com.example.thestrongbox.WelcomeSlide.WelcomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 
 public class LoginActivity extends AppCompatActivity {
@@ -160,11 +158,11 @@ public class LoginActivity extends AppCompatActivity {
             String UID = mAuth.getCurrentUser().getUid();
             userDatabaseReference.child(UID).child("verified").setValue("true");
 
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("USER_PASS", userPassword.getText().toString());
+            Intent WelcomeIntent =  new Intent(LoginActivity.this, WelcomeActivity.class);
+            WelcomeIntent.putExtra("USER_PASS", userPassword.getText().toString());
+            WelcomeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             userPassword.setText("");
-            startActivity(intent);
+            startActivity(WelcomeIntent);
             finish();
         } else {
             Toast.makeText(LoginActivity.this, "Email is not verified. Please verify first",Toast.LENGTH_SHORT).show();
