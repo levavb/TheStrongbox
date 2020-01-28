@@ -58,7 +58,11 @@
         android:configChanges="orientation|screenSize"
         android:parentActivityName=".Home.MainActivity"/>
         <activity
-            android:name=".Account.UpdateAccountActivity"
+        android:name=".Account.UpdateAccountActivity"
+        android:configChanges="orientation|screenSize"
+        android:parentActivityName=".Home.MainActivity"/>
+        <activity
+            android:name=".Account.ViewAccountActivity"
             android:configChanges="orientation|screenSize"
             android:parentActivityName=".Home.MainActivity"/>
         <activity

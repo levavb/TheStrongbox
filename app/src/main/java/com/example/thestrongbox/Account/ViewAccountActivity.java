@@ -4,25 +4,25 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
+
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
-import com.example.thestrongbox.Class.AutoSuggestAdapter;
-import com.example.thestrongbox.Home.MainActivity;
 import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.Model.MyBaseActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,21 +30,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.example.thestrongbox.R;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 
-public class UpdateAccountActivity extends MyBaseActivity {
+public class ViewAccountActivity extends MyBaseActivity {
 
     private static final String TAG = "UpdateAccountActivity";
 
     private DatabaseReference UpdateDatabaseReference;
-
-    private String UserId;
+    private String entry_id;
     private Button editButton;
     private EditText inputEmail, inputPassword, inputNote;
     AutoCompleteTextView inputUrl;
@@ -57,26 +50,25 @@ public class UpdateAccountActivity extends MyBaseActivity {
 
         aToolbar = findViewById(R.id.account_toolbar);
         setSupportActionBar(aToolbar);
-        getSupportActionBar().setTitle("Update Account");
+        getSupportActionBar().setTitle("Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String user_id = mAuth.getCurrentUser().getUid();
-        String entry_id = getIntent().getStringExtra("entryId");
+        entry_id = getIntent().getStringExtra("entryId");
         UpdateDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users").child(user_id).child("data").child(entry_id);
 
 
         inputEmail = findViewById(R.id.inputEmail);
         inputPassword = findViewById(R.id.inputPassword);
-        inputNote = findViewById(R.id.inputNote);
         inputUrl = findViewById(R.id.inputUrl);
+        inputNote = findViewById(R.id.inputNote);
         editButton = findViewById(R.id.AddButton);
 
-        // Get the string array
-        List<String> urls = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.url_array)));
-        // Create the adapter and set it to the AutoCompleteTextView
-        AutoSuggestAdapter adapter = new AutoSuggestAdapter(this, android.R.layout.simple_list_item_1, urls);
-        inputUrl.setAdapter(adapter);
-        inputUrl.setThreshold(1);
+        inputEmail.setEnabled(false);
+        inputPassword.setEnabled(false);
+        inputUrl.setInputType(InputType.TYPE_NULL);
+        inputUrl.setFocusable(false);
+        inputNote.setEnabled(false);
 
         setListenerToCopyImage();
 
@@ -97,72 +89,49 @@ public class UpdateAccountActivity extends MyBaseActivity {
                 }
                 inputNote.setText(note);
                 inputUrl.setText(url);
-                editButton.setText("Edit");
+                inputUrl.setText(Html.fromHtml("<a href=" + "" + ">" + url + "</a>"));
+                final String Surl = url;
+                inputUrl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!TextUtils.isEmpty(Surl)) {
+                            Intent intent_url = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + Surl));
+                            startActivity(intent_url);
+                        }
+                    }
 
+                });
+                editButton.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-        /** Edit information */
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String note = inputNote.getText().toString();
-                String email = inputEmail.getText().toString();
-                String password = inputPassword.getText().toString();
-                String url = inputUrl.getText().toString();
-
-                saveInformation(email, note, password, url);
-            }
-        });
-
-
     }
 
-    private void saveInformation(String email, String note, String password, String url) {
+    // tool bar action menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.view_menu, menu);
+        return true;
+    }
 
-        if (TextUtils.isEmpty(email)){
-            Toast.makeText(UpdateAccountActivity.this, "Oops! your Email can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (email.length() > 25) {
-            Toast.makeText(UpdateAccountActivity.this, "Your Email/User Name should be 1 to 25 numbers of characters.", Toast.LENGTH_SHORT).show();
-        } else if (TextUtils.isEmpty(password)){
-            Toast.makeText(UpdateAccountActivity.this, "Oops! your Password can't be empty",Toast.LENGTH_SHORT).show();
-        } else if (password.length() > 30){
-            Toast.makeText(UpdateAccountActivity.this, "Your Password should be 1 to 30 numbers of characters.",Toast.LENGTH_SHORT).show();
-        } else if (url.length() > 35){
-            Toast.makeText(UpdateAccountActivity.this, "Your Url should be 1 to 35 numbers of characters.",Toast.LENGTH_SHORT).show();
-        } else {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
 
-            String password_enc = null;
-            try {
-                password_enc = AESCrypt.encrypt(password, MasterKey);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            UpdateDatabaseReference.child("date").setValue(new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date()));
-            UpdateDatabaseReference.child("email").setValue(email);
-            UpdateDatabaseReference.child("url").setValue(url);
-            UpdateDatabaseReference.child("note").setValue(note);
-            UpdateDatabaseReference.child("password").setValue(password_enc)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("UpdateDB:", "Completed");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d("UpdateDB:", "Failed");
-                }
-            });
-            Intent mainIntent = new Intent(UpdateAccountActivity.this, MainActivity.class);
-            startActivity(mainIntent);
+        if (item.getItemId() == R.id.menu_edit){
+            Intent intent =  new Intent(ViewAccountActivity.this, UpdateAccountActivity.class);
+            intent.putExtra("entryId", entry_id);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
+
+        return true;
     }
+
 
     void setListenerToCopyImage() {
 
@@ -212,3 +181,4 @@ public class UpdateAccountActivity extends MyBaseActivity {
 
     }
 }
+

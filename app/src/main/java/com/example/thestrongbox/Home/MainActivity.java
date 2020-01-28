@@ -22,9 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-
-
-
 import com.example.thestrongbox.About.AboutAppActivity;
 import com.example.thestrongbox.Account.AddAccountActivity;
 import com.example.thestrongbox.LoginReg.LoginActivity;

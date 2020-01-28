@@ -1,5 +1,8 @@
 package com.example.thestrongbox.Account;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.thestrongbox.Class.AutoSuggestAdapter;
@@ -46,8 +50,8 @@ public class AddAccountActivity extends MyBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_account);
-        aToolbar = findViewById(R.id.add_account_toolbar);
+        setContentView(R.layout.activity_account_template);
+        aToolbar = findViewById(R.id.account_toolbar);
         setSupportActionBar(aToolbar);
         getSupportActionBar().setTitle("Add Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -76,7 +80,7 @@ public class AddAccountActivity extends MyBaseActivity {
                 uploadAccount();
             }
         });
-
+        setListenerToCopyImage();
     }
 
     public void uploadAccount() {
@@ -130,5 +134,53 @@ public class AddAccountActivity extends MyBaseActivity {
             mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mainIntent);
         }
+    }
+
+    void setListenerToCopyImage() {
+
+        ImageButton emailCopyBtn = findViewById(R.id.email_copy_btn);
+        emailCopyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("EditText", inputEmail.getText().toString());
+                clipboard.setPrimaryClip(clip);
+            }
+
+        });
+
+        ImageButton passCopyBtn = findViewById(R.id.pass_copy_btn);
+        passCopyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("EditText", inputPassword.getText().toString());
+                clipboard.setPrimaryClip(clip);
+            }
+
+        });
+
+        ImageButton urlCopyBtn = findViewById(R.id.url_copy_btn);
+        urlCopyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("EditText", inputUrl.getText().toString());
+                clipboard.setPrimaryClip(clip);
+            }
+
+        });
+
+        ImageButton noteCopyBtn = findViewById(R.id.note_copy_btn);
+        noteCopyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("EditText", inputNote.getText().toString());
+                clipboard.setPrimaryClip(clip);
+            }
+
+        });
+
     }
 }

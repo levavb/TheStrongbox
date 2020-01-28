@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 
 import com.example.thestrongbox.Account.UpdateAccountActivity;
+import com.example.thestrongbox.Account.ViewAccountActivity;
 import com.example.thestrongbox.R;
 import com.google.firebase.database.DatabaseReference;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         holder.itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, UpdateAccountActivity.class);
+                Intent intent = new Intent(context, ViewAccountActivity.class);
                 intent.putExtra("entryId", dataKey);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 context.startActivity(intent);
