@@ -190,7 +190,6 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
                 String Snote = dataSnapshot.child("note").getValue().toString();
                 String Surl = dataSnapshot.child("url").getValue().toString();
                 String Sdate = dataSnapshot.child("date").getValue().toString();
-                Log.d("LEVAV", "ON CHILD ADD = " + AccountList.size());
                 AccountList.add(new Account(dataSnapshot.getKey(), SuserName, Snote, Surl, Sdate));
                 AccountAdapter.notifyDataSetChanged();
             }
@@ -203,7 +202,6 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
                 account.setNote(dataSnapshot.child("note").getValue().toString());
                 account.setUrl(dataSnapshot.child("url").getValue().toString());
                 account.setDate(dataSnapshot.child("date").getValue().toString());
-                Log.d("LEVAV", "ON CHILD change");
                 AccountAdapter.notifyDataSetChanged();
             }
 

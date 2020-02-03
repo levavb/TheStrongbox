@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +15,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.thestrongbox.Class.AutoSuggestAdapter;
@@ -97,6 +99,7 @@ public class UpdateAccountActivity extends MyBaseActivity {
                 }
                 inputNote.setText(note);
                 inputUrl.setText(url);
+                setImageAccountByUrl(url);
                 editButton.setText("Edit");
 
             }
@@ -210,5 +213,21 @@ public class UpdateAccountActivity extends MyBaseActivity {
 
         });
 
+    }
+
+    void setImageAccountByUrl(String url) {
+        ImageView imageView = findViewById(R.id.ImageAccount);
+        ArrayList<String> urls = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.url_array)));
+        int index = urls.indexOf(url);
+        if (index != -1) {
+            String urlAfterOnePoint = url.substring(url.indexOf(".") + 1);
+            String imageName = urlAfterOnePoint.substring(0, urlAfterOnePoint.indexOf("."));
+            String uri = "@drawable/" + imageName + "_image";
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            if (imageResource != 0) {
+                Drawable res = getResources().getDrawable(imageResource, getTheme());
+                imageView.setImageDrawable(res);
+            }
+        }
     }
 }

@@ -7,16 +7,17 @@
     <string name="skip">SKIP</string>
     <string name="start">START</string>
 
+    <!--when you add new url you need add image that related to trl to drawable folder with name that url contain between first two "." + _image-->
     <string-array name="url_array">
         <item>www.gmail.com</item>
         <item>www.facebook.com</item>
         <item>www.instagram.com</item>
         <item>www.github.com</item>
-        <item>www.bitgroup.co.il</item>
         <item>www.netflix.com</item>
         <item>www.discountbank.co.il</item>
         <item>www.bankhapoalim.co.il</item>
         <item>www.telhai.ac.il</item>
         <item>www.ebay.com</item>
     </string-array>
+
 </resources>

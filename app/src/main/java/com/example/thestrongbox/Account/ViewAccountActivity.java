@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -20,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.thestrongbox.Model.AESCrypt;
 import com.example.thestrongbox.Model.MyBaseActivity;
@@ -30,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.example.thestrongbox.R;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ViewAccountActivity extends MyBaseActivity {
@@ -89,6 +93,7 @@ public class ViewAccountActivity extends MyBaseActivity {
                 }
                 inputNote.setText(note);
                 inputUrl.setText(url);
+                setImageAccountByUrl(url);
                 inputUrl.setText(Html.fromHtml("<a href=" + "" + ">" + url + "</a>"));
                 final String Surl = url;
                 inputUrl.setOnClickListener(new View.OnClickListener() {
@@ -179,6 +184,22 @@ public class ViewAccountActivity extends MyBaseActivity {
 
         });
 
+    }
+
+    void setImageAccountByUrl(String url) {
+        ImageView imageView = findViewById(R.id.ImageAccount);
+        ArrayList<String> urls = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.url_array)));
+        int index = urls.indexOf(url);
+        if (index != -1) {
+            String urlAfterOnePoint = url.substring(url.indexOf(".") + 1);
+            String imageName = urlAfterOnePoint.substring(0, urlAfterOnePoint.indexOf("."));
+            String uri = "@drawable/" + imageName + "_image";
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+            if (imageResource != 0) {
+                Drawable res = getResources().getDrawable(imageResource, getTheme());
+                imageView.setImageDrawable(res);
+            }
+        }
     }
 }
 
