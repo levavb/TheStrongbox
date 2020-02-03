@@ -38,22 +38,22 @@ import java.util.Arrays;
 
 public class ViewAccountActivity extends MyBaseActivity {
 
-    private static final String TAG = "UpdateAccountActivity";
+    private static final String TAG = "ViewAccountActivity";
 
     private DatabaseReference UpdateDatabaseReference;
     private String entry_id;
     private Button editButton;
     private EditText inputEmail, inputPassword, inputNote;
     AutoCompleteTextView inputUrl;
-    private Toolbar aToolbar;
+    private Toolbar bToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_template);
 
-        aToolbar = findViewById(R.id.account_toolbar);
-        setSupportActionBar(aToolbar);
+        bToolbar = findViewById(R.id.account_toolbar);
+        setSupportActionBar(bToolbar);
         getSupportActionBar().setTitle("Account");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -125,7 +125,6 @@ public class ViewAccountActivity extends MyBaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
 
         if (item.getItemId() == R.id.menu_edit){
             Intent intent =  new Intent(ViewAccountActivity.this, UpdateAccountActivity.class);
@@ -134,7 +133,7 @@ public class ViewAccountActivity extends MyBaseActivity {
             startActivity(intent);
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
 
