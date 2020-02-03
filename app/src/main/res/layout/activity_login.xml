@@ -3,6 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/background_image"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
@@ -19,9 +20,9 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:src="@mipmap/logo_foreground"
+            android:src="@drawable/official_logo"
             android:background="@null"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="01dp"

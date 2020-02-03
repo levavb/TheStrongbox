@@ -11,7 +11,7 @@
         android:id="@+id/account_image"
         android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:src="@mipmap/logo_foreground" />
+        android:src="@drawable/official_logo" />
 
     <LinearLayout
         android:layout_width="fill_parent"

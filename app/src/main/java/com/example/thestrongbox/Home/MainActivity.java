@@ -91,7 +91,7 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
             userDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    addWellcomeBubble(dataSnapshot.child("user_name").getValue().toString());
+                    addWelcomeBubble(dataSnapshot.child("user_name").getValue().toString());
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
@@ -234,12 +234,12 @@ public class MainActivity extends MyBaseActivity implements SearchView.OnQueryTe
     }
 
     @SuppressLint({"ResourceAsColor", "WrongConstant"})
-    private void addWellcomeBubble(String UserName) {
+    private void addWelcomeBubble(String UserName) {
 
-        TextView welcome_tv = findViewById(R.id.WellcomeBubble);
+        TextView welcome_tv = findViewById(R.id.WelcomeBubble);
         TextView part_day_tv = findViewById(R.id.DayPart);
 
-        welcome_tv.setText("Wellcome " + UserName);
+        welcome_tv.setText("Welcome " + UserName);
         part_day_tv.setText(getBlessingDayText());
 
     }
