@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +20,7 @@ import com.example.thestrongbox.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Timer;
@@ -58,7 +58,15 @@ public class ForgotPassActivity extends AppCompatActivity {
                     Toast.makeText(ForgotPassActivity.this,"Email format is not valid.",Toast.LENGTH_SHORT).show();
                 } else {
                     // send email to reset password
-                    auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+
+                    ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
+                            .setUrl("https://thestrongbox.page.link/UcVD")
+                            // The default for this is populated with the current android package name.
+                            .setAndroidPackageName("com.example.thestrongbox", false, null)
+                            .setHandleCodeInApp(true)
+                            .build();
+                    auth.sendPasswordResetEmail(email, actionCodeSettings).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){

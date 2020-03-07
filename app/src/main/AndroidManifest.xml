@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".LoginReg.LoginActivity">
             <intent-filter>
@@ -39,7 +40,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ForgotPassword.ForgotPassActivity"
-            android:parentActivityName=".LoginReg.LoginActivity" />
+            android:parentActivityName=".LoginReg.LoginActivity"></activity>
         <activity
             android:name=".LoginReg.RegisterActivity"
             android:configChanges="orientation|screenSize"
@@ -47,28 +48,46 @@
         <activity
             android:name=".About.AboutAppActivity"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".Home.MainActivity"/>
+            android:parentActivityName=".Home.MainActivity" />
         <activity
             android:name=".ProfileSetting.SettingsActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleInstance"
-            android:parentActivityName=".Home.MainActivity"/>
+            android:parentActivityName=".Home.MainActivity" />
         <activity
-        android:name=".Account.AddAccountActivity"
-        android:configChanges="orientation|screenSize"
-        android:parentActivityName=".Home.MainActivity"/>
+            android:name=".Account.AddAccountActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".Home.MainActivity" />
         <activity
-        android:name=".Account.UpdateAccountActivity"
-        android:configChanges="orientation|screenSize"
-        android:parentActivityName=".Home.MainActivity"/>
+            android:name=".Account.UpdateAccountActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".Home.MainActivity" />
         <activity
             android:name=".Account.ViewAccountActivity"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".Home.MainActivity"/>
+            android:parentActivityName=".Home.MainActivity" />
         <activity
             android:name=".ForgotPassword.ChangePasswordActivity"
             android:configChanges="orientation|screenSize"
-            android:parentActivityName=".ProfileSetting.SettingsActivity"/>
+            android:parentActivityName=".ProfileSetting.SettingsActivity" />
+
+        <activity
+            android:name=".ForgotPassword.ResetPassActivity"
+            android:configChanges="orientation|screenSize"
+            android:parentActivityName=".ProfileSetting.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="thestrongbox.page.link"
+                    android:pathPattern="/Resetpass" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
