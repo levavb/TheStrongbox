@@ -11,27 +11,10 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="@dimen/img_width"
-            android:layout_height="@dimen/img_height"
-            android:src="@drawable/secure" />
-
-        <TextView
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="title_slide4"
-            android:textColor="@android:color/black"
-            android:textSize="@dimen/slide_title"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/desc_padding"
-            android:paddingRight="@dimen/desc_padding"
-            android:text="desc_slide4"
-            android:textAlignment="center"
-            android:textSize="@dimen/slide_desc" />
+            android:paddingBottom="30dp"
+            android:src="@drawable/welcome_slide4" />
 
     </LinearLayout>
 

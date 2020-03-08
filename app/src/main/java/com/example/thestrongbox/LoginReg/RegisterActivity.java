@@ -3,6 +3,7 @@ package com.example.thestrongbox.LoginReg;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -141,7 +142,12 @@ public class RegisterActivity extends AppCompatActivity {
                                                                         if (task.isSuccessful()){
 
                                                                             registerSuccessPopUp();
-
+                                                                            // saving in local cache through Shared Preferences
+                                                                            SharedPreferences sharedPreferences = getSharedPreferences("PREFS", MODE_PRIVATE);
+                                                                            SharedPreferences.Editor editor;
+                                                                            editor = sharedPreferences.edit();
+                                                                            editor.putInt("INTRO", 0);
+                                                                            editor.apply();
                                                                             // LAUNCH activity after certain time period
                                                                             new Timer().schedule(new TimerTask(){
                                                                                 public void run() {

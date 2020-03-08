@@ -43,10 +43,6 @@ public class IntroActivity extends Activity {
         if(sharedPreferences.getInt("INTRO", 0) == 1){
             String pass = getIntent().getStringExtra("USER_PASS");
             getIntent().putExtra("USER_PASS", "");
-            SharedPreferences.Editor editor;
-            editor = sharedPreferences.edit();
-            editor.putInt("INTRO", 0);
-            editor.apply();
             Intent MainIntent = new Intent(IntroActivity.this, MainActivity.class);
             MainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             MainIntent.putExtra("USER_PASS", pass);
